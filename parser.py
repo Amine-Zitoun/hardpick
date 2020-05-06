@@ -29,28 +29,42 @@ def cpu_formattor(cpu):
 	return res_cpu.lower()
 
 def gpu_val(gpu):
+	print("\n\n\n\n"+gpu+"\n\n\n")
 	res_gpu = ''
 	arr = gpu.split(' ')
-	if 'G' in arr[-1]:
+	print("\n\n\n\n"+str(arr)+"\n\n\n")
+	if 'G' in arr[-1] and len(arr[-1]) <= 3:
+		print("g in arr-1")
 		vl = arr[-1].split('G')[0]
 	else:
-		if 'G' in arr[-2]:
+		print("g not in arr-1 checking for others")
+		if 'G' in arr[-2] and len(arr[-2]) <= 3:
+			print('g in arr-2')
+			print(arr[-2])
 			vl = arr[-2].split('G')[0]
 		else:
-			if 'G' in arr[-3]:
+			print("g not i arr-2")
+			if 'G' in arr[-3] and len(arr[-3]) <= 3:
 				vl = arr[-3].split('G')[0]
 
 	return int(vl)
 
-def benchmark(c1,c2,comp):
+def benchmark(c1,c2,c3,comp):
 	print(c1,c2)
 	if comp == "gpu":
 		vl1 = gpu_val(c1)
 		vl2 = gpu_val(c2)
+		vl3 = gpu_val(c3)
 		if vl1 >= vl2:
-			return c1
+			if vl1 >= vl3:
+				return c1
+			else:
+				return c3
 		else:
-			return c2
+			if vl2 >= vl3:
+				return c2
+			else:
+				return c3
 	elif comp == "cpu":
 		url = "https://www.cpubenchmark.net/high_end_cpus.html"
 		#print(url)
@@ -82,8 +96,49 @@ def benchmark(c1,c2,comp):
 	elif comp == "ram":
 		url ="https://ram.userbenchmark.com"
 	
+def search_wiki(comp,budget):
+	if comp == "gpu":
+		comp = "carte-graphique-131.html#"
+		num_pages = 6
+	if comp == "cpu":
+		comp = "processeur-130.html"
+		num_pages = 2
+	if comp == "ram":
+		comp = "barrette-memoire-133.html"
+		num_pages = 1
+	
+	temp =[]
+	all_comp=[]
+	temp2=[]
+	prices=[]
+	url = "https://www.wiki.tn/c/"+comp+"/"
+	res = requests.get(url)
+	html = bs(res.text,'lxml')
+	temp=[[y.text for y in x.findChildren('a',recursive=False)] for x in html.find_all('h4',{'class': 'name'})]
+	all_comp = [x[0] for x in temp]
 
+	temp2.append([[y.text for y in x.findChildren('span',recursive=False)]  for x  in html.find_all('div',{'class': 'content_price'})])
 
+	prices.append([float(x[0].split('D')[0].replace(',','')) for x in temp2[0]])
+	prices = prices[0]
+	#print(prices)
+	comp_prices = dict(zip(all_comp,prices))
+
+	#print(comp_prices)
+	final_comp =[]
+	final_price =[]
+	for key,val in comp_prices.items():
+		if float(val) <= float(budget):
+			final_comp.append(key)
+			final_price.append(float(val))
+		else:
+			pass
+	dict_res=  dict(zip(final_comp,final_price))
+
+	r = sorted(dict_res.items(), key=lambda item: item[1])
+	print(r)
+	final_shit = {'site': 'wiki','price': r[-1][1], 'prd': r[-1][0]}
+	return final_shit
 def search_megapc(comp,budget):
 	if comp == "gpu":
 		comp = "carte-graphique"
@@ -96,7 +151,7 @@ def search_megapc(comp,budget):
 	html = bs(res.text,'lxml')
 	#print(html)
 	all_comp = [x.text for x in html.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
-	prices = [x.text.split('\xa0')[0].replace(',','') for x in html.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
+	prices = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
 	comp_prices = dict(zip(all_comp,prices))
 	
 	final_comp =[]
@@ -110,7 +165,7 @@ def search_megapc(comp,budget):
 	dict_res=  dict(zip(final_comp,final_price))
 
 	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(r)
+	#print(r)
 	final_shit = {'site': 'mega-pc','price': r[-1][1], 'prd': r[-1][0]}
 	return final_shit
 
@@ -126,7 +181,7 @@ def search_sbs(comp,budget):
 	res = requests.get(url)
 	html=bs(res.text,"lxml")
 	all_comp = [x.text for x in html.find_all('b',{'class': 'VignBlue'})]
-	prices = [x.text.split('D')[0].replace(',','') for x in html.find_all('b',{'class': 'bordeau14'})]
+	prices = [x.text.split('D')[0].replace(',','')+"000" for x in html.find_all('b',{'class': 'bordeau14'})]
 	comp_prices = dict(zip(all_comp,prices))
 	final_comp =[]
 	final_price= []
@@ -139,7 +194,7 @@ def search_sbs(comp,budget):
 				pass
 	dict_res=  dict(zip(final_comp,final_price))
 	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(r)
+	#print(r)
 	final_shit ={'site': 'sbs','price': r[-1][1], 'prd': r[-1][0]}
 	return final_shit
 
@@ -149,11 +204,16 @@ class get_comp(Resource):
 		print(comp,budget)
 		l1 = search_megapc(comp,budget)
 		prd1= l1['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-		print(l1)
+
 		l2 = search_sbs(comp,budget)
 		prd2 =l2['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-		win = benchmark(prd1,prd2,comp)
-		result = {'data': [l1,l2,win]}
+		
+		l3 = search_wiki(comp,budget)
+		prd3 =l3['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+		
+
+		win = benchmark(prd1,prd2,prd3,comp)
+		result = {'data': [l1,l2,l3,win]}
 		return jsonify(result)
 
 

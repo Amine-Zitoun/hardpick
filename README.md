@@ -2,10 +2,9 @@
 yo racem dis is the fokin parser
 
 ## DONE
-finished cpu_formattor
-finished gpu_formattor
+finsished gpu_search for wiki
 
 ## TODO
-add scoop informatique
-add wiki informatique
-format strings to add to benchmark database
+add scoop informatique [USELSSS SCOOP INFOR IS USELESS]
+add wiki informatique [FINISHED IT BASICALLY STILL ONLY CPU SEARCH AND RAM]
+format strings to add to benchmark database [DONE]
