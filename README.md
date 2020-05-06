@@ -1,7 +1,11 @@
 # parser
 yo racem dis is the fokin parser
 
+## DONE
+finished cpu_formattor
+finished gpu_formattor
+
 ## TODO
-1-add scoop informatique
-2-add wiki informatique
-3-format strings to add to benchmark database
+add scoop informatique
+add wiki informatique
+format strings to add to benchmark database
