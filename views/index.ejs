@@ -10,11 +10,13 @@
             <div class="explain">Select what is below and you are set</div>
         </div>
         <form action="/search" method="POST">
+            <div class="all">
                 <div class="data-inputs">
                     <div class="detail">
                         <div class="inp-title"><label>Component</label></div>
-                        <div class="menu-selc">
+                        <div class="select">
                             <select name="comp">
+                                <option selected disabled>Choose an item</option>
                                 <option>CPU</option>
                                 <option>GPU</option>
                                 <option>MOTHERBOARD</option>
@@ -23,23 +25,24 @@
                     </div>
                     <div class="detail-mid">
                         <div class="inp-title"><label>Region</label></div>
-                        <div class="inp-item">
+                        <div class="select">
                             <select name="reg">
+                                <option selected disabled>Choose an item</option>
                                 <option>Tunisia</option>
                             </select>
                         </div>
-                    </div> 
+                    </div>
                     <div class="detail">
-                        <div class="inp-title"><label>Price</label></div>
-                        <div class="inp-item">
-                            <input type="number" name="price" min="100">
+                        <div class="inp-title-last"><label>Price</label></div>
+                        <div class="money">
+                            <input type="number" name="price" min="100" max="5000">
                         </div>
                     </div>    
-                    <div class="btn-row">
-                        <button class="btn-primary" type="submit">Search</button>
-                    </div>
                 </div>
-            </form>
-        </div>
+                <div class="btn-row">
+                    <button class="btn-primary" type="submit">Search</button>
+                </div>
+            </div>       
+        </form>
     </div>
 </div>
