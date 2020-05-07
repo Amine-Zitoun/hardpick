@@ -130,7 +130,10 @@ def search_extreme(comp,budget):
 
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	print(r)
-	final_shit = {'site': 'extreme','price': r[-1][1], 'prd': r[-1][0]}
+	try:
+		final_shit = {'site': 'extreme','price': r[-1][1], 'prd': r[-1][0]}
+	except IndexError:
+		final_shit ={'site': 'extreme','price': 0.0,'prd':''}
 	return final_shit
 	#print(s.find('h2',{'class':'woocommerce-loop-product__title'}))
 def search_wiki(comp,budget):
@@ -174,7 +177,10 @@ def search_wiki(comp,budget):
 
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	print(r)
-	final_shit = {'site': 'wiki','price': r[-1][1], 'prd': r[-1][0]}
+	try:
+		final_shit = {'site': 'wiki','price': r[-1][1], 'prd': r[-1][0]}
+	except IndexError:
+		final_shit ={'site': 'wiki','price': 0.0,'prd':''}
 	return final_shit
 def search_megapc(comp,budget):
 	if comp == "gpu":
@@ -203,7 +209,10 @@ def search_megapc(comp,budget):
 
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	#print(r)
-	final_shit = {'site': 'mega-pc','price': r[-1][1], 'prd': r[-1][0]}
+	try:
+		final_shit = {'site': 'mega-pc','price': r[-1][1], 'prd': r[-1][0]}
+	except IndexError:
+		final_shit ={'site': 'mega-pc','price': 0.0,'prd':''}
 	print(final_shit)
 	return final_shit
 
@@ -242,7 +251,10 @@ def search_sbs(comp,budget):
 	#print(dict_res)
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	print(r)
-	final_shit ={'site': 'sbs','price': r[-1][1], 'prd': r[-1][0]}
+	try:
+		final_shit ={'site': 'sbs','price': r[-1][1], 'prd': r[-1][0]}
+	except IndexError:
+		final_shit ={'site': 'sbs','price': 0.0,'prd':''}
 	return final_shit
 
 
