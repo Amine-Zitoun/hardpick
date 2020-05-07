@@ -31,21 +31,21 @@ def cpu_formattor(cpu):
 	return res_cpu.lower()
 
 def gpu_val(gpu):
-	print("\n\n\n\n"+gpu+"\n\n\n")
+	#print("\n\n\n\n"+gpu+"\n\n\n")
 	res_gpu = ''
 	arr = gpu.split(' ')
-	print("\n\n\n\n"+str(arr)+"\n\n\n")
+	#print("\n\n\n\n"+str(arr)+"\n\n\n")
 	if 'G' in arr[-1] and len(arr[-1]) <= 3:
-		print("g in arr-1")
+		#print("g in arr-1")
 		vl = arr[-1].split('G')[0]
 	else:
-		print("g not in arr-1 checking for others")
+		#print("g not in arr-1 checking for others")
 		if 'G' in arr[-2] and len(arr[-2]) <= 3:
-			print('g in arr-2')
-			print(arr[-2])
+			#print('g in arr-2')
+			#print(arr[-2])
 			vl = arr[-2].split('G')[0]
 		else:
-			print("g not i arr-2")
+			#print("g not i arr-2")
 			if 'G' in arr[-3] and len(arr[-3]) <= 3:
 				vl = arr[-3].split('G')[0]
 
@@ -97,7 +97,42 @@ def benchmark(c1,c2,c3,comp):
 			return c2
 	elif comp == "ram":
 		url ="https://ram.userbenchmark.com"
-	
+def search_extreme(comp,budget):
+	url = "https://extremegaming.tn/composants-accessoires/"
+	res = requests.get(url)
+	html = bs(res.text,'lxml')
+	if comp == "gpu":
+		div_name = "tab-carte-graphique"
+	elif comp == "cpu":
+		div_name  = "tab-cpu"
+	elif comp == "ram":
+		div_name = "tab-ram"
+	products =[]
+	prices = []
+	s = html.find_all('div',{'id': div_name})
+	for x in s:
+		prd = x.find_all('h2')
+		price = x.find_all('span',{'class': 'woocommerce-Price-amount amount'})
+		for p,pr in zip(prd,price):
+			products.append(p.text)
+			prices.append(float(pr.text.split('.')[0].replace(',','')+"000"))
+
+	comp_prices = dict(zip(products,prices))
+	final_comp =[]
+	final_price =[]
+	for key,val in comp_prices.items():
+		if float(val) <= float(budget):
+			final_comp.append(key)
+			final_price.append(float(val))
+		else:
+			pass
+	dict_res=  dict(zip(final_comp,final_price))
+
+	r = sorted(dict_res.items(), key=lambda item: item[1])
+	print(r)
+	final_shit = {'site': 'extreme','price': r[-1][1], 'prd': r[-1][0]}
+	return final_shit
+	#print(s.find('h2',{'class':'woocommerce-loop-product__title'}))
 def search_wiki(comp,budget):
 	if comp == "gpu":
 		comp = "carte-graphique-131.html#"
@@ -169,6 +204,7 @@ def search_megapc(comp,budget):
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	#print(r)
 	final_shit = {'site': 'mega-pc','price': r[-1][1], 'prd': r[-1][0]}
+	print(final_shit)
 	return final_shit
 
 
@@ -183,20 +219,29 @@ def search_sbs(comp,budget):
 	res = requests.get(url)
 	html=bs(res.text,"lxml")
 	all_comp = [x.text for x in html.find_all('b',{'class': 'VignBlue'})]
+	status = [x.text.split('\xa0')[0] for x in html.find_all('span',{'class': 'DispoNew'})]
+	print(status)
 	prices = [x.text.split('D')[0].replace(',','')+"000" for x in html.find_all('b',{'class': 'bordeau14'})]
 	comp_prices = dict(zip(all_comp,prices))
 	final_comp =[]
 	final_price= []
+	i = 0
 	for key,val in comp_prices.items():
-
-			if float(val) <= float(budget):
+		print(key,status[i])
+		if val == "N.C 000":
+			pass
+		elif float(val) <= float(budget):
+			if status[i] == "En stock":
+				print(key)
 				final_comp.append(key)
 				final_price.append(float(val))
 			else:
 				pass
+		i += 1
 	dict_res=  dict(zip(final_comp,final_price))
+	#print(dict_res)
 	r = sorted(dict_res.items(), key=lambda item: item[1])
-	#print(r)
+	print(r)
 	final_shit ={'site': 'sbs','price': r[-1][1], 'prd': r[-1][0]}
 	return final_shit
 
@@ -210,7 +255,7 @@ class get_comp(Resource):
 		l2 = search_sbs(comp,budget)
 		prd2 =l2['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 		
-		l3 = search_wiki(comp,budget)
+		l3 = search_extreme(comp,budget)
 		prd3 =l3['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 		
 
@@ -224,4 +269,5 @@ api.add_resource(get_comp, '/get_comp/<comp>/<budget>')
 if __name__ == "__main__":
 	#print("INTEL® CORE™ I7-7800X".encode('ascii', 'ignore').decode('unicode_escape'))
 	#benchmark("AMD Ryzen 7 3700X".encode('ascii', 'ignore').decode('unicode_escape'),"INTEL® CORE™ I7-7800X".encode('ascii', 'ignore').decode('unicode_escape'),'cpu')
+	#search_sbs('gpu',150000)
 	app.run(port='5000')
