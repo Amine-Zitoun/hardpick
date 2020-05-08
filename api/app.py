@@ -98,6 +98,56 @@ def benchmark(c1,c2,c3,comp):
 			return c2
 	elif comp == "ram":
 		url ="https://ram.userbenchmark.com"
+
+def process_prices(all_comp,prices,budget,site):
+	comp_prices = dict(zip(all_comp,prices))
+
+	#print(comp_prices)
+	final_comp =[]
+	final_price =[]
+	print(comp_prices)
+	for key,val in comp_prices.items():
+		if float(val) <= float(budget):
+			final_comp.append(key)
+			final_price.append(float(val))
+		else:
+			pass
+	dict_res=  dict(zip(final_comp,final_price))
+	print(dict_res)
+
+	r = sorted(dict_res.items(), key=lambda item: item[1])
+	print(r)
+	try:
+		final_shit = {'site': site,'price': r[-1][1], 'prd': r[-1][0]}
+	except IndexError:
+		final_shit ={'site': site,'price': 0.0,'prd':''}
+	return final_shit
+
+
+def search_tunisia(comp,budget):
+	url = "https://www.tunisianet.com.tn/"
+	if comp == "gpu":
+		comp = '410-carte-graphique'
+	elif comp == "cpu":
+		comp = "421-processeur"
+	elif comp == "ram":
+		comp = "409-barrette-memoire"
+	res = requests.get(url+comp)
+	html = bs(res.text,'lxml')
+	print(html)
+
+	#s = html.find_all('h2',{'class': 'h3 product-title'})
+	temp=[[y.text for y in x.findChildren('a',recursive=False)] for x in html.find_all('h2',{'class': 'h3 product-title'})]
+	#print(s)
+	all_comp = [x[0] for x in temp]
+	print(all_comp)
+	all_prices = [float((y.text).replace('\xa0','').replace(',','').split('D')[0]) for y in html.find_all('span',{'class':'price'})]
+	return process_prices(all_comp,all_prices,budget,'tunisia')
+
+
+
+
+
 def search_extreme(comp,budget):
 	url = "https://extremegaming.tn/composants-accessoires/"
 	res = requests.get(url)
@@ -118,24 +168,7 @@ def search_extreme(comp,budget):
 			products.append(p.text)
 			prices.append(float(pr.text.split('.')[0].replace(',','')+"000"))
 
-	comp_prices = dict(zip(products,prices))
-	final_comp =[]
-	final_price =[]
-	for key,val in comp_prices.items():
-		if float(val) <= float(budget):
-			final_comp.append(key)
-			final_price.append(float(val))
-		else:
-			pass
-	dict_res=  dict(zip(final_comp,final_price))
-
-	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(r)
-	try:
-		final_shit = {'site': 'extreme','price': r[-1][1], 'prd': r[-1][0]}
-	except IndexError:
-		final_shit ={'site': 'extreme','price': 0.0,'prd':''}
-	return final_shit
+	return process_prices(products,prices,budget,'extreme')
 	#print(s.find('h2',{'class':'woocommerce-loop-product__title'}))
 def search_wiki(comp,budget):
 	if comp == "gpu":
@@ -163,26 +196,7 @@ def search_wiki(comp,budget):
 	prices.append([float(x[0].split('D')[0].replace(',','')) for x in temp2[0]])
 	prices = prices[0]
 	#print(prices)
-	comp_prices = dict(zip(all_comp,prices))
-
-	#print(comp_prices)
-	final_comp =[]
-	final_price =[]
-	for key,val in comp_prices.items():
-		if float(val) <= float(budget):
-			final_comp.append(key)
-			final_price.append(float(val))
-		else:
-			pass
-	dict_res=  dict(zip(final_comp,final_price))
-
-	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(r)
-	try:
-		final_shit = {'site': 'wiki','price': r[-1][1], 'prd': r[-1][0]}
-	except IndexError:
-		final_shit ={'site': 'wiki','price': 0.0,'prd':''}
-	return final_shit
+	return process_prices(all_comp,all_prices,budget,'wiki')
 def search_megapc(comp,budget):
 	if comp == "gpu":
 		comp = "carte-graphique"
@@ -196,27 +210,7 @@ def search_megapc(comp,budget):
 	#print(html)
 	all_comp = [x.text for x in html.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
 	prices = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
-	comp_prices = dict(zip(all_comp,prices))
-	#zboub 9a7ba
-	final_comp =[]
-	final_price =[]
-	for key,val in comp_prices.items():
-		if float(val) <= float(budget):
-			final_comp.append(key)
-			final_price.append(float(val))
-		else:
-			pass
-	dict_res=  dict(zip(final_comp,final_price))
-
-	r = sorted(dict_res.items(), key=lambda item: item[1])
-	#print(r)
-	try:
-		final_shit = {'site': 'mega-pc','price': r[-1][1], 'prd': r[-1][0]}
-	except IndexError:
-		final_shit ={'site': 'mega-pc','price': 0.0,'prd':''}
-	print(final_shit)
-	return final_shit
-
+	return process_prices(all_comp,prices,budget,'mega')
 #sdfsddfsdf
 def search_sbs(comp,budget):
 	if comp == "gpu":
@@ -258,43 +252,26 @@ def search_sbs(comp,budget):
 		final_shit ={'site': 'sbs','price': 0.0,'prd':''}
 	return final_shit
 
-'''
-class get_comp(Resource):
-	def get(self,comp,budget):
-		print(comp,budget)
-		l1 = search_megapc(comp,budget)
-		prd1= l1['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-
-		l2 = search_sbs(comp,budget)
-		prd2 =l2['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-		
-		l3 = search_extreme(comp,budget)
-		prd3 =l3['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-		
-
-		win = benchmark(prd1,prd2,prd3,comp)
-		result = {'data': [l1,l2,l3,win]}
-		return jsonify(result)
-'''
-
 
 @app.route('/api/',methods=['GET'])
 def res():
 	comp= request.args.get('comp',None)
 	budget = request.args.get('budget',None)
 	print(comp,budget)
-	l1 = search_megapc(comp,budget)
-	prd1= l1['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+	mega = search_megapc(comp,budget)
+	mega_prd= mega['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 
-	l2 = search_sbs(comp,budget)
-	prd2 =l2['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+	sbs = search_sbs(comp,budget)
+	sbs_prd =sbs['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 		
-	l3 = search_extreme(comp,budget)
-	prd3 =l3['prd'].encode('ascii', 'ignore').decode('unicode_escape')
-		
+	extrme = search_extreme(comp,budget)
+	extrme_prd =extrme['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+	
+	tn = search_tunisia(comp,budget)
+	tn_prd =tn['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 
-	win = benchmark(prd1,prd2,prd3,comp)
-	result = {'data': [l1,l2,l3,win]}
+	win = benchmark(mega_prd,sbs_prd,extrme_prd,comp)
+	result = {'data': [mega,sbs,extrme,tn],'win': win}
 	return jsonify(result)
 #api.add_resource(get_comp, '/get_comp/<comp>/<budget>')
 @app.route('/')
@@ -303,5 +280,5 @@ def index():
 if __name__ == "__main__":
 	#print("INTEL® CORE™ I7-7800X".encode('ascii', 'ignore').decode('unicode_escape'))
 	#benchmark("AMD Ryzen 7 3700X".encode('ascii', 'ignore').decode('unicode_escape'),"INTEL® CORE™ I7-7800X".encode('ascii', 'ignore').decode('unicode_escape'),'cpu')
-	#search_sbs('gpu',150000)
+	#print(search_tunisia('ram',5000000))
 	app.run(port='5000')
