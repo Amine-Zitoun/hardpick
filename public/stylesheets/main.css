@@ -175,6 +175,23 @@ select {
     color: #222;
 }
 
+.country .m-op:nth-child(2){
+    position: relative;
+    background-color: red;
+}
+
+.country option:nth-child(2)::after {
+    position: absolute;
+    content: "";
+    background-color: brown;
+    top: 0px;
+    left: 0px;
+    display: block;
+    width: 100px;
+    height: 100px;
+    z-index: 2;
+}
+
 .btn-row {
     display: flex;
     justify-content: center;
@@ -196,14 +213,42 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .money input {
-    width: 100px;
+    margin-left: -25px;
+    font-weight: 700;
+    width: 90px;
     height: 38px;
     background-color: #222;
     color: white;
     border: 0;
     border-radius: 0.25em;
     margin-top: 12px;
-    font-size: 1.5em;
-    text-align: center;
+    font-size: 1.3em;
     outline: none;
+    text-align: center;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.money{
+    position: relative;
+}
+
+.money::after {
+    position: absolute;
+    line-height: 1.7;
+    text-align: center;
+    top: 12px;
+    left: calc(90px - 25px);
+    content: "?";
+    position: absolute;
+    display: block;
+    width: 34px;
+    height: 38px;
+    background-color: black;
+    z-index: auto;
+    padding: 1px 0;
+    font-weight: 500;
+    font-size: 20px;
+    border-top-right-radius: 0.25em;
+    border-bottom-right-radius: 0.25em;
 }
