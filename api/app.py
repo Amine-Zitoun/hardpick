@@ -390,19 +390,25 @@ def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	#print(list(dict_res.keys()).index(r[-1][0]))
 	#print(final_frq[list(dict_res.keys()).index(r[-1][0])])
+
+	try:
+
+		freq = final_frq[list(dict_res.keys()).index(r[-1][0])]
+		cap  = final_cap[list(dict_res.keys()).index(r[-1][0])]
+		typem = final_typem[list(dict_res.keys()).index(r[-1][0])]
+	except:
+		freq= 0
+		cap = 0
+		typem=0
+
 	try:
 
 		final_shit = {'site': site,
 			'price': r[-1][1],
 			 'prd': r[-1][0],
-			"typem": final_typem[list(dict_res.keys()).index(r[-1][0])],
-			 "cap":final_cap[list(dict_res.keys()).index(r[-1][0])],
-			 'frq': final_frq[list(dict_res.keys()).index(r[-1][0])]}
-		'''else:
-									final_shit = {'site': site,
-									'price': r[-1][1],
-									 'prd': r[-1][0],
-									 "typem": 0,"cap":0,"frq": 0}'''
+			"typem": typem,
+			 "cap":cap,
+			 'frq': freq}
 	except IndexError:
 		final_shit ={'site': site,'price': 0.0,'prd':'',"typem": 0,"cap":0,"frq": 0}
 	return final_shit
@@ -579,18 +585,25 @@ def search_sbs(comp,budget):
 	dict_res=  dict(zip(final_comp,final_price))
 	# sort dict
 	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(final_cap)
 	try:
-		final_shit ={'site': 'sbs',
+
+		freq = final_frq[list(dict_res.keys()).index(r[-1][0])]
+		cap  = final_cap[list(dict_res.keys()).index(r[-1][0])]
+		typem = final_typem[list(dict_res.keys()).index(r[-1][0])]
+	except:
+		freq= 0
+		cap = 0
+		typem=0
+
+	try:
+
+		final_shit = {
+			'site': 'sbs',
 			'price': r[-1][1],
 			 'prd': r[-1][0],
-			 "typem": final_typem[list(dict_res.keys()).index(r[-1][0])],
-			 "cap":final_cap[list(dict_res.keys()).index(r[-1][0])],
-			 'frq': final_frq[list(dict_res.keys()).index(r[-1][0])]}
-		'''else:
-									final_shit ={'site': 'sbs',
-									'price': r[-1][1],
-									 'prd': r[-1][0],"typem": 0,"cap":0,"frq": 0 }'''
+			"typem": typem,
+			 "cap":cap,
+			 'frq': freq}
 	except IndexError:
 		final_shit ={'site': 'sbs','price': 0.0,'prd':'',"typem": 0,"cap":0,"frq": 0 }
 	return final_shit
