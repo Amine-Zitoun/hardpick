@@ -14,22 +14,38 @@
                 <div class="data-inputs">
                     <div class="detail">
                         <div class="inp-title"><label>Component</label></div>
-                        <div class="select">
-                            <select name="comp">
-                                <option selected disabled>Choose an item</option>
-                                <option>CPU</option>
-                                <option>GPU</option>
-                                <option>MOTHERBOARD</option>
-                            </select>
+                        <div class="select-box">
+                            <div class="option-container">
+                                <div class="option">
+                                    <input id="cpu" type="radio" class="radio" name="cpu">
+                                    <label for="cpu">CPU</label>
+                                </div>
+                                <div class="option">
+                                    <input id="gpu" type="radio" class="radio" name="gpu">
+                                    <label for="gpu">GPU</label>
+                                </div>
+                                <div class="option">
+                                    <input id="ram" type="radio" class="radio" name="ram">
+                                    <label for="ram">RAM</label>
+                                </div>
+                            </div>
+                            <div class="selected">
+                                Pick an item
+                            </div>
                         </div>
                     </div>
                     <div class="detail-mid">
                         <div class="inp-title"><label>Region</label></div>
-                        <div class="select">
-                            <select name="reg" class="country">
-                                <option selected disabled>Choose an item</option>
-                                <option>Tunisia</option>
-                            </select>
+                        <div class="select-box">
+                            <div class="option-container">
+                                <div class="option">
+                                    <input id="tn" type="radio" class="radio" name="region">
+                                    <label for="tn">Tunisia</label>
+                                </div>
+                            </div>
+                            <div class="selected">
+                                Pick an item
+                            </div>
                         </div>
                     </div>
                     <div class="detail">

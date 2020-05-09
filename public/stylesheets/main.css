@@ -83,7 +83,8 @@ body {
 
 .data-inputs {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: space-between;
     margin-top: 40px;
     flex-wrap: wrap;
@@ -93,6 +94,7 @@ body {
 .detail {
     display: flex;
     flex-direction: column;
+    justify-content: start;
     align-items: center;
     flex-basis: 0;
     flex-grow: 1;
@@ -101,6 +103,7 @@ body {
 .detail-mid {
     display: flex;
     flex-direction: column;
+    justify-content: start;
     align-items: center;
     flex-basis: 0;
     flex-grow: 1;
@@ -119,61 +122,116 @@ body {
     font-size: 2rem;
     font-weight: bold;
     flex-grow: 1;
-    margin-bottom: 5px;
 }
 
-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    outline: 0;
-    box-shadow: none;
-    border: 0 !important;
-    background: #222;
-    background-image: none;
+/*select-box design*/
+
+.select-box {
+    display: flex;
+    width: 180px;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 15px;
 }
 
-select::-ms-expand {
+.selected {
+    color: #f5f6fa;
+    background: #2f3640;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    position: relative;
+    width: 180px;
+    order: 0;
+    height: 34px;
+    line-height: 0.6;
+    text-align: start;
+}
+
+.selected::after {
+    content: "";
+    background: url(../icons/arrow-down.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 30px;
+    right: 10px;
+    top: 1px;
+    transition: all 0.4s;
+}
+
+.select-box .option-container {
+    background: #2f3640;
+    max-height: 0;
+    opacity: 0;
+    color: #f5f6fa;
+    transition: all 0.4s;
+    border-radius: 8px;
+    overflow: hidden;
+    order: 1;
+}
+
+/*set to scroll if list too long but ugly 4 short ones*/
+.select-box .option-container.active {
+    max-height: 240px;
+    opacity: 1;
+    overflow-y: hidden;
+}
+
+.select-box .option-container.active  + .selected::after {
+    transform: rotateX(180deg);
+    top: -3px;
+}
+
+.select-box .option-container::-webkit-scrollbar {
+    width: 8px;
+    background-color: #0d141f;
+    border-radius: 0 8px 8px 0;
+}
+
+.select-box .option-container::-webkit-scrollbar-thumb {
+    background-color: #525861;
+    border-radius: 0 8px 8px 0;
+}
+
+.select-box .option, .selected {
+    padding: 12px 24px;
+    cursor: pointer;
+} 
+
+.select-box label {
+    cursor: pointer;
+}
+
+.select-box .option-container .option:hover {
+    background: #414b57;
+}
+
+.select-box .option .radio {
     display: none;
 }
 
-.select {
-    position: relative;
-    display: flex;
-    width: 200px;
-    height: 40px;
-    line-height: 2.8;
-    overflow: hidden;
-    border-radius: .25em;
-    text-align: center;
-}
 
-select {
-    flex: 1;
-    padding: 0 1.75em;
-    color: #fff;
-    cursor: pointer;
-}
 
-.select::after {
-    font-size: 15px;
-    content: '\25BC';
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0 1em;
-    background: #000000;
-    cursor: pointer;
-    pointer-events: none;
-    -webkit-transition: .25s all ease;
-    -o-transition: .25s all ease;
-    transition: .25s all ease;
-}
 
-.select:hover::after {
-    color: #222;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .country .m-op:nth-child(2){
     position: relative;
@@ -216,12 +274,12 @@ input[type=number]::-webkit-inner-spin-button {
     margin-left: -25px;
     font-weight: 700;
     width: 90px;
-    height: 38px;
+    height: 32px;
     background-color: #222;
     color: white;
     border: 0;
     border-radius: 0.25em;
-    margin-top: 12px;
+    margin-top: 20px;
     font-size: 1.3em;
     outline: none;
     text-align: center;
