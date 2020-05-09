@@ -29,7 +29,7 @@ def search_intense(key,l):
 			return i
 		else:
 			pass
-	return "ss"
+	return "not found"
 
 
 
@@ -63,12 +63,6 @@ def ram_formattor(url,site):
 					freqs.append(int(f.text.split('Fréquence')[1].split(' ')[2].split('\n')[0]))
 					#print(f.text.split('Fréquence')[1].split(' ')[2].split('\n')[0])
 
-		print (len(caps),len(typems),len(freqs))
-		print(caps)
-		print("=============")
-		print(typems)
-		print("============")
-		print(freqs)
 
 		return caps,typems,freqs
 
@@ -149,71 +143,164 @@ def gpu_val(gpu,site):
 
 	#return int(vl)
 
-def benchmark(c1,c2,c3,comp):
+def benchmark(c1,c2,comp):
 	print(c1,c2)
 	if comp == "gpu":
+		# GET ALL THE PARTS FROM THE LEADERBOARD
+
 		url = "https://www.videocardbenchmark.net/high_end_gpus.html"
 		res = requests.get(url)
 		html = bs(res.text,'lxml')
 		parts = [(x.text).lower() for x in html.find_all('span',{'class': 'prdname'})]
 		points = [float(x.text.replace(',','.')) for x in html.find_all('span',{'class': 'mark-neww'})]
-		final_res = dict(zip(parts,points))
-		print("FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
 
-		key = gpu_val(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
-		print("TURNED IT INTO: "+key)
+		final_res = dict(zip(parts,points))
+
+		# FORMATS THE NAME OF THE PRODUCT 
+		print("[*] FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
+
+		key1 = gpu_val(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
+		print("[*] TURNED IT INTO: "+key1)
+		#print(parts)
+
+		# searches in the learderboard
+
+		res1= search_intense(key1.lower(),parts)
+		print("[*] CHCKED ON DB AND FOUND: "+res1)
+
+		# gets value
+
+		vl1=final_res[res1]
+
+		#same process for 2
+		key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
+		print("[*] TURNED IT INTO: "+key2)
 		print(parts)
-		res= search_intense(key.lower(),parts)
-		print("CHCKED ON DB AND FOUND: "+res)
-		vl1=final_res[res]
-		print(vl1)
+		res2= search_intense(key2.lower(),parts)
+		print("[*] CHCKED ON DB AND FOUND: "+res2)
+		vl2=final_res[res2]
+
+		#compares values
+
+		if vl1 >= vl2:
+			return c1
+		else:
+			return c2
+
 
 	elif comp == "cpu":
 		url = "https://www.cpubenchmark.net/high_end_cpus.html"
 		#print(url)
-		key = cpu_formattor(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
-		print("FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
-		#c2 = cpu_formattor(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
-		print(c1,c2)
+		# GET ALL THE PARTS FROM THE LEADERBOARD
+
+
 		res = requests.get(url)
 		html = bs(res.text,'lxml')
-		#print(html)
 		parts = [(x.text).lower() for x in html.find_all('span',{'class': 'prdname'})]
 		points = [float(x.text.replace(',','.')) for x in html.find_all('span',{'class': 'mark-neww'})]
 		final_res = dict(zip(parts,points))
-		c1_word =search_intense(key.lower(),parts)
-		print("TURNED IT INTO: "+key)
-		print("FOUND ON DB: ",c1_word)
-		#c2_word = search_intense(c2,parts)
-		vl1 = final_res[c1_word]
-		print(vl1)
+
+
+		# FORMATS THE NAME OF THE PRODUCT 
+		key1 = cpu_formattor(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
+		print("[*]  FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
+		print("[*] TURNED IT INTO: "+key1)
+		res1= search_intense(key1.lower(),parts)
+		print("[*] CHCKED ON DB AND FOUND: "+res1)
+		# gets value
+		vl1=final_res[res1]
+
+		# same process
+		key2 = cpu_formattor(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
+		print("[*]  FOUND ON SITE: "+c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
+		print("[*] TURNED IT INTO: "+key2)
+		print(parts)
+		res2= search_intense(key2.lower(),parts)
+		print("[*] CHCKED ON DB AND FOUND: "+res2)
+		vl2=final_res[res2]
+
+		# compares vls
+		if vl1 >= vl2:
+			return c1
+		else:
+			return c2
+
+		
 	
 	elif comp == "ram":
-		url ="https://ram.userbenchmark.com"
+		# gets ram data from both
+
+		frq1 = c1['frq']
+		cap1 = c1['cap']
+		typem1 = c1['typem']
+
+		frq2 = c2['frq']
+		cap2 = c2['cap']
+		typem2 = c2['typem']
+
+		pt1=0
+		pt2=0
+		# compares data
+
+		if frq1 > frq2:
+			pt1 += 1
+		elif frq1 < frq2:
+			pt2 += 1
+		else:
+			pass
+
+		if cap1 > cap2:
+			pt1 += 1
+		elif cap1 < cap2:
+			pt2 += 1
+		else:
+			pass
+
+		if int(typem1[-1]) > int(typem2[-1]):
+			pt1 += 1
+		elif int(typem1[-1]) < int(typem2[-1]):
+			pt2 += 1
+		else:
+			pass
+
+		# compares vls
+		if pt1 >= pt2:
+			return c1
+		else:
+			return c2
 
 
-def process_prices(all_comp,prices,budget,site):
+def process_prices(all_comp,prices,budget,site,freqs,caps,typems):
 	comp_prices = dict(zip(all_comp,prices))
 
 	#print(comp_prices)
 	final_comp =[]
 	final_price =[]
-	print(comp_prices)
+	#print(comp_prices)
+
+
 	for key,val in comp_prices.items():
 		if float(val) <= float(budget):
 			final_comp.append(key)
 			final_price.append(float(val))
 		else:
 			pass
+
+
 	dict_res=  dict(zip(final_comp,final_price))
-	print(dict_res)
+	#print(dict_res)
 
 	r = sorted(dict_res.items(), key=lambda item: item[1])
-	print(r)
+	#print(r)
 	try:
-		final_shit = {'site': site,'price': r[-1][1], 'prd': r[-1][0]}
+		final_shit = {'site': site,
+		'price': r[-1][1],
+		 'prd': r[-1][0],
+		"typem": typems[list(dict_res.keys()).index(r[-1][0])],
+		 "cap":caps[list(dict_res.keys()).index(r[-1][0])],
+		 'frq': freqs[list(dict_res.keys()).index(r[-1][0])]}
 	except IndexError:
-		final_shit ={'site': site,'price': 0.0,'prd':''}
+		final_shit ={'site': site,'price': 0.0,'prd':'',"typem": 0,"cap":0,"frq": 0}
 	return final_shit
 
 
@@ -225,6 +312,8 @@ def search_tunisia(comp,budget):
 		comp = "421-processeur"
 	elif comp == "ram":
 		comp = "409-barrette-memoire"
+
+		caps,typems,freqs=ram_formattor(url+comp,"tunisia")
 	res = requests.get(url+comp)
 	html = bs(res.text,'lxml')
 	print(html)
@@ -235,7 +324,7 @@ def search_tunisia(comp,budget):
 	all_comp = [x[0] for x in temp]
 	print(all_comp)
 	all_prices = [float((y.text).replace('\xa0','').replace(',','').split('D')[0]) for y in html.find_all('span',{'class':'price'})]
-	return process_prices(all_comp,all_prices,budget,'tunisia')
+	return process_prices(all_comp,all_prices,budget,'tunisia',freqs,caps,typems)
 
 
 
@@ -251,6 +340,7 @@ def search_extreme(comp,budget):
 		div_name  = "tab-cpu"
 	elif comp == "ram":
 		div_name = "tab-ram"
+		caps,typems,freqs=ram_formattor(url,"extreme")
 	products =[]
 	prices = []
 	s = html.find_all('div',{'id': div_name})
@@ -261,9 +351,12 @@ def search_extreme(comp,budget):
 			products.append(p.text)
 			prices.append(float(pr.text.split('.')[0].replace(',','')+"000"))
 
-	return process_prices(products,prices,budget,'extreme')
+	return process_prices(products,prices,budget,'extreme',freqs,caps,typems)
+
+
+
 	#print(s.find('h2',{'class':'woocommerce-loop-product__title'}))
-def search_wiki(comp,budget):
+'''def search_wiki(comp,budget):
 	if comp == "gpu":
 		comp = "carte-graphique-131.html#"
 		num_pages = 6
@@ -289,29 +382,41 @@ def search_wiki(comp,budget):
 	prices.append([float(x[0].split('D')[0].replace(',','')) for x in temp2[0]])
 	prices = prices[0]
 	#print(prices)
-	return process_prices(all_comp,all_prices,budget,'wiki')
+	return process_prices(all_comp,all_prices,budget,'wiki')'''
 def search_megapc(comp,budget):
+
+	# Identify url from the comp type
+
 	if comp == "gpu":
 		comp = "carte-graphique"
+		url = "https://www.mega-pc.net/boutique/composants/"+comp
 	if comp == "cpu":
 		comp = "processeur"
+		url = "https://www.mega-pc.net/boutique/composants/"+comp
 	if comp == "ram":
 		comp = "barette-memoire"
-	url = "https://www.mega-pc.net/boutique/composants/"+comp
+		# Get the ram data from the ram_formattor function
+		url = "https://www.mega-pc.net/boutique/composants/"+comp
+		caps,typems,freqs=ram_formattor(url,"mega")
+	
+	# parse all products and according prices
 	res = requests.get(url)
 	html = bs(res.text,'lxml')
 	#print(html)
 	all_comp = [x.text for x in html.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
 	prices = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
-	return process_prices(all_comp,prices,budget,'mega')
+	return process_prices(all_comp,prices,budget,'mega',freqs,caps,typems)
 
 
 
 #sdfsddfsdf
 def search_sbs(comp,budget):
+
 	freqs=[]
 	typems=[]
 	caps=[]
+
+	# Identify url from the comp type
 
 	if comp == "gpu":
 		comp = "tunisie-cartes-graphiques"
@@ -323,9 +428,11 @@ def search_sbs(comp,budget):
 	elif comp == "ram":
 		comp = "tunisie-barettes-memoires"
 
+		# Get the ram data from the ram_formattor function
 		url = "http://www.sbsinformatique.com/"+comp
 		caps,typems,freqs=ram_formattor(url,"sbs")
 
+	# parse all products and according prices
 	res = requests.get(url)
 	html=bs(res.text,"lxml")
 	all_comp = [x.text for x in html.find_all('b',{'class': 'VignBlue'})]
@@ -333,22 +440,22 @@ def search_sbs(comp,budget):
 	print(status)
 	prices = [x.text.split('D')[0].replace(',','')+"000" for x in html.find_all('b',{'class': 'bordeau14'})]
 	comp_prices = dict(zip(all_comp,prices))
+
+	# vars
 	final_comp =[]
 	final_price= []
-	idx = []
+
 	final_frq =[]
 	final_typem=[]
 	final_cap=[]
 	i = 0
+
+	# get all products with price lower then budget and update ram data
 	for key,val in comp_prices.items():
-		#print(key,status[i])
 		if val == "N.C 000":
 			pass
 		elif float(val) <= float(budget):
 			if status[i] == "En stock":
-				#print(key)
-				#idx.append(i)
-				#if "ram" == "ram":
 				try:
 					final_frq.append(freqs[i])
 					final_typem.append(typems[i])
@@ -361,10 +468,10 @@ def search_sbs(comp,budget):
 			else:
 				pass
 		i += 1
-	print(final_frq)
+
+	# store in dict
 	dict_res=  dict(zip(final_comp,final_price))
-	print(final_comp)
-	#print(dict_res)
+	# sort dict
 	r = sorted(dict_res.items(), key=lambda item: item[1])
 	
 	try:
@@ -384,20 +491,24 @@ def res():
 	comp= request.args.get('comp',None)
 	budget = request.args.get('budget',None)
 	print(comp,budget)
+	# Searches for mega pc 
 	mega = search_megapc(comp,budget)
 	mega_prd= mega['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 
+	# Searches for sbs 
 	sbs = search_sbs(comp,budget)
 	sbs_prd =sbs['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 		
+	# Search extreme
 	extrme = search_extreme(comp,budget)
 	extrme_prd =extrme['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 	
+	# Search tunisianet
 	tn = search_tunisia(comp,budget)
 	tn_prd =tn['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 
-	print(mega_prd)
-
+	#print(mega_prd)
+	# benchmark all products
 	win = benchmark(mega,sbs,extrme,comp)
 	result = {'data': [mega,sbs,extrme,tn],'win': win}
 	return jsonify(result)
