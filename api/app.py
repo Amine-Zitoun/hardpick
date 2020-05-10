@@ -23,6 +23,7 @@ def search_intense(key,l):
 	print("zbi?")
 	for i in l:
 		#print("CHECKING "+key+" with "+i)
+		print("checking ",i,"with ",key)
 		if key in i:
 			#print("CHECKING "+key+" with "+i)
 			print('FOUND MATCH')
@@ -142,10 +143,56 @@ def ram_formattor(url,site):
 						freqs.append(int(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3]))
 		print( caps,typems,freqs)
 		return caps,typems,freqs
+	if site == "extreme":
+		res = requests.get(url)
+		caps = []
+		typems = []
+		freqs= []
+		html = bs(res.text,'lxml')
+		#print(html)
+		#all_comp = [x.text.encode('ascii', 'ignore').decode('unicode_escape') for x in html.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
+		products=[]
+		s = html.find_all('div',{'id': "tab-ram"})
+		for x in s:
+			prd = x.find_all('h2')
+		#price = x.find_all('span',{'class': 'woocommerce-Price-amount amount'})
+			for p in prd:
+				products.append(p.text.encode('ascii', 'ignore').decode('unicode_escape'))
+
+
+
+
+		for i in products:
+			print("vengeance" == i.lower().split(' ')[0],i.lower().split(' ')[0])
+			if "pny" in i.lower() and "8" in i.lower():
+				caps.append(8)
+				typems.append("DDR4")
+				freqs.append(2666)
+
+			elif i.lower().split(' ')[0] == "vengeance":
+				if "3000Mhz" in i.lower():
+					caps.append(16)
+					freqs.append(3000)
+					typems.append("DDR4")
+				else:
+					caps.append(16)
+					freqs.append(3200)
+					typems.append("DDR4")
+			elif i.startswith("16"):
+				caps.append(16)
+				freqs.append(2666)
+				typems.append("DDR4")
+			else:
+				caps.append(8)
+				freqs.append(3000)
+				typems.append("DDR4")
+
+		print( caps,typems,freqs)
+		return caps,typems,freqs
 
 def cpu_formattor(cpu,site):
 	word= cpu.split(' ')
-	if site == "sbs":
+	if site == "sbs" or site == "mega":
 		if cpu[0].lower() == "p":
 			res_word=word[1:]
 		else:
@@ -156,6 +203,26 @@ def cpu_formattor(cpu,site):
 		elif res_word[0].lower() == "amd":
 			key = res_word[0] + ' '+res_word[1]+' '+res_word[2]+' '+res_word[3]
 		return key
+	if site == "extreme":
+		res_word = word
+		if res_word[0].lower() == "amd":
+			key = cpu.lower()
+		if res_word[0].lower() == "cpu":
+			key = res_word[1]+' '+res_word[2]+' '+res_word[3]
+		if res_word[0].lower() == "intel":
+			if res_word[1].lower() == "i9":
+				key = res_word[1]+'-'+res_word[2]
+			else:
+				key = cpu.lower().split('-')[0]+cpu.lower().split('-')[1]+cpu.lower().split('-')[2]
+		if res_word[0].lower().startswith('pent'):
+			key = cpu.lower()
+		if res_word[0].lower().startswith('ry'):
+			key = "amd"+' '+cpu.lower()
+		if res_word[0].lower().startswith('pro'):
+			key = ' '.join(res_word[1:])
+		return key
+
+
 
 	#return res_cpu.lower()
 
@@ -219,6 +286,31 @@ def gpu_val(gpu,site):
 		else:
 			key = res_word[0]+' '+res_word[1]+' '+res_word[2]
 		return key.lower()
+	if site == "extreme":
+		res_word = gpu.split(' ')
+		if res_word[0].lower() == "geforce":
+			if res_word[1].lower() == "rtx":
+				if res_word[3].lower() == "super" or res_word[3].lower() == "ti":
+					key = res_word[0]+' '+res_word[1]+' '+res_word[2]+' '+res_word[3]
+				else:
+					key = res_word[0]+' '+res_word[1]+' '+res_word[2]
+			elif res_word[1].lower() == "gt":
+				key = res_word[1]+' '+res_word[2]
+		if res_word[0].lower() == "gtx":
+			key = res_word[0]+' '+res_word[1]+' '+res_word[2]
+		if res_word[0].lower() == "gtx1660":
+			key = "gtx 1660"
+		if res_word[0].lower() == "pny":
+			if res_word[1].lower() == "1660":
+				key = "gtx 1660 super"
+			else:
+				key = res_word[0]+' '+res_word[1]+' '+res_word[2]+' '+res_word[3]
+		if res_word[0].lower() == "msi":
+			key = res_word[1]+' '+res_word[2]
+		if res_word[0].lower() == "asus":
+			key = res_word[2]
+		return key
+
 
 
 			
@@ -244,25 +336,30 @@ def benchmark(c1,c2,comp):
 		print("[*] FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
 
 		key1 = gpu_val(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
+
 		print("[*] TURNED IT INTO: "+key1)
 		#print(parts)
 
 		# searches in the learderboard
 
-		res1= search_intense(key1,parts)
+		res1= search_intense(key1.lower(),parts)
 		print("[*] CHCKED ON DB AND FOUND: "+res1)
 
 		# gets value
-
-		vl1=final_res[res1]
-
+		if res1 != "not found":	
+			vl1=final_res[res1]
+		else:
+			vl1 = 0
 		#same process for 2
 		key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
 		print("[*] TURNED IT INTO: "+key2)
 		print(parts)
 		res2= search_intense(key2.lower(),parts)
 		print("[*] CHCKED ON DB AND FOUND: "+res2)
-		vl2=final_res[res2]
+		if res2 != "not found":	
+			vl2=final_res[res2]
+		else:
+			vl2 = 0
 
 		#compares values
 
@@ -443,6 +540,9 @@ def search_extreme(comp,budget):
 	url = "https://extremegaming.tn/composants-accessoires/"
 	res = requests.get(url)
 	html = bs(res.text,'lxml')
+	freqs=[]
+	caps=[]
+	typems=[]
 	if comp == "gpu":
 		div_name = "tab-carte-graphique"
 	elif comp == "cpu":
@@ -459,8 +559,8 @@ def search_extreme(comp,budget):
 		for p,pr in zip(prd,price):
 			products.append(p.text)
 			prices.append(float(pr.text.split('.')[0].replace(',','')+"000"))
-
-	return process_prices(products,prices,budget,'extreme',freqs,caps,typems)
+	print(dict(zip(products,prices)))
+	return process_prices(comp,products,prices,budget,'extreme',freqs,caps,typems)
 
 
 
@@ -503,7 +603,61 @@ def search_megapc(comp,budget):
 		url = "https://www.mega-pc.net/boutique/composants/"+comp
 	if comp == "cpu":
 		comp = "processeur"
-		url = "https://www.mega-pc.net/boutique/composants/"+comp
+		url1 = "https://www.mega-pc.net/boutique/composants/"+comp
+		url2 = "https://www.mega-pc.net/boutique/composants/"+comp+"/page/2/"
+		res1 = requests.get(url1)
+		html1 = bs(res1.text,'lxml')
+		res2 = requests.get(url2)
+		html2 = bs(res2.text,'lxml')
+		#print(html)
+		print("")
+		for i in html2.find_all('span',{'class': 'price'}):
+			if i.text.count("T") > 1:
+				print(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+			else:
+				print(i.text.split('\xa0')[0].replace(',','')+"000")
+			#print(i.text)
+			print("\n\n")
+
+		prices1=[]
+		prices2=[]
+
+		all_comp1 = [x.text for x in html1.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
+
+
+		for i in html1.find_all('span',{'class': 'price'}):
+			if i.text.count("T") > 1:
+				prices1.append(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+			else:
+				prices1.append(i.text.split('\xa0')[0].replace(',','')+"000")
+			#print(i.text)
+			#print("\n\n")
+
+
+		#prices1 = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html1.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
+		all_comp2 = [x.text for x in html2.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
+		
+		for i in html2.find_all('span',{'class': 'price'}):
+			print(i.text.count("T"))
+			if i.text.count("T") == 2:
+				prices2.append(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+			else:
+				prices2.append(i.text.split('\xa0')[0].replace(',','')+"000")
+
+		#prices2 = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html2.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
+		
+		#print()
+		#print(all_comp2)
+		#print(len(prices2),len(all_comp2))
+		#print(dict(zip(all_comp2,prices2)))
+		prices = prices1+prices2
+		all_comp = all_comp1+all_comp2
+		#print(len(prices),len(all_comp))
+		#print(len(prices1),len(prices2))
+		#print(len(all_comp1),len(all_comp2))
+		#print(dict(zip(all_comp,prices)))
+		return process_prices(comp,all_comp,prices,budget,'mega',freqs,caps,typems)
+
 	if comp == "ram":
 		comp = "barette-memoire"
 		# Get the ram data from the ram_formattor function
@@ -623,8 +777,8 @@ def res():
 	sbs_prd =sbs['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 		
 	# Search extreme
-	#extrme = search_extreme(comp,budget)
-	#extrme_prd =extrme['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+	extrme = search_extreme(comp,budget)
+	extrme_prd =extrme['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 	
 	# Search tunisianet
 	#tn = search_tunisia(comp,budget)
@@ -632,8 +786,9 @@ def res():
 
 	#print(mega_prd)
 	# benchmark all products
-	win1 = benchmark(mega,sbs,comp)
-	result = {'data': [mega,sbs],'win': win1}
+	win1 = benchmark(sbs,mega,comp)
+	win2 = benchmark(win1,extrme,comp)
+	result = {'data': [mega,sbs,extrme],'win': win2}
 	return jsonify(result)
 #api.add_resource(get_comp, '/get_comp/<comp>/<budget>')
 @app.route('/')
@@ -646,5 +801,6 @@ if __name__ == "__main__":
 	#ram_formattor("zz","http://www.sbsinformatique.com/tunisie-barettes-memoires","sbs")
 	#print(search_sbs("ram",500000))
 	#benchmark(search_sbs('cpu',100000000000000),"ss","ss","cpu")
+	#print(search_extreme('gpu',500000000))
 	app.run(port='5000')
 	#print(gpu_val("ASUS GeForce GTX 1660 SUPER TUF GAMING 6GB OC","mega"))
