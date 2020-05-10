@@ -310,7 +310,56 @@ def gpu_val(gpu,site):
 		if res_word[0].lower() == "asus":
 			key = res_word[2]
 		return key
-
+	if site == "tunisia":
+		word =gpu.split(' ')
+		res_word =word[2:]
+		print(res_word)
+		if res_word[0].lower() == "palit":
+			if res_word[1].lower() == "geforce":
+				if res_word[2].lower() == "gt":
+					key = res_word[2] + ' '+res_word[3]
+				elif res_word[2].lower() == "gtx":
+					if res_word[4].lower() in ['ti','super']:
+						key = res_word[1]+' '+res_word[2]+' '+res_word[3]+' '+res_word[4]
+					else:
+						key = res_word[1]+' '+res_word[2]+' '+res_word[3]
+				else:
+					key =res_word[1]+' '+res_word[2]
+			elif res_word[1].lower() == "gtx":
+				if res_word[3].lower() in ['ti','super']:
+						key = res_word[1]+' '+res_word[2]+' '+res_word[3]
+				else:
+						key = res_word[1]+' '+res_word[2]
+		if res_word[0].lower() == "gigabyte":
+			if res_word[1].lower() == "geforce":
+				if res_word[2].lower() == "gtx":
+					if res_word[4].lower() in ['ti','super']:
+						key = res_word[1]+' '+res_word[2]+' '+res_word[3]+' '+res_word[4]
+					else:
+						key = res_word[1]+' '+res_word[2]+' '+res_word[3]
+				else:
+					key = res_word[1]+' '+res_word[2]
+			if res_word[1].lower() == "gtx": 
+				if res_word[3].lower() in ['ti','super']:
+					key = res_word[1]+' '+res_word[2]+' '+res_word[3] 
+				else:
+					key = res_word[1]+' '+res_word[2]
+		if res_word[0].lower() == "msi":
+			if res_word[1].lower() == "geforce":
+				if res_word[4].lower() in ['ti','super']:
+					key = res_word[1]+' '+res_word[2]+' '+res_word[3]+' '+res_word[4]
+				else:
+					key =res_word[1]+' '+res_word[2]+' '+res_word[3]
+			if res_word[1].lower() == "radeon":
+				key =res_word[1]+' '+res_word[2]+' '+res_word[3]
+			if res_word[1].lower() == "gtx":
+				key =res_word[1]+' '+res_word[2]+' '+res_word[3]
+		if res_word[0].lower() == "asus":
+			if res_word[1].lower() == "geforce":
+				key =res_word[1]+' '+res_word[2]+' '+res_word[3]+' '+res_word[4]
+			else:
+				key ="radeon rx 5700 xt"
+		return key
 
 
 			
@@ -513,6 +562,9 @@ def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
 
 def search_tunisia(comp,budget):
 	url = "https://www.tunisianet.com.tn/"
+	freqs=[]
+	caps=[]
+	typems=[]
 	if comp == "gpu":
 		comp = '410-carte-graphique'
 	elif comp == "cpu":
@@ -529,9 +581,16 @@ def search_tunisia(comp,budget):
 	temp=[[y.text for y in x.findChildren('a',recursive=False)] for x in html.find_all('h2',{'class': 'h3 product-title'})]
 	#print(s)
 	all_comp = [x[0] for x in temp]
-	print(all_comp)
+	#print(all_comp)
+	#print(len(prices))
 	all_prices = [float((y.text).replace('\xa0','').replace(',','').split('D')[0]) for y in html.find_all('span',{'class':'price'})]
-	return process_prices(all_comp,all_prices,budget,'tunisia',freqs,caps,typems)
+	t = 0
+	new_prices=[]
+	while t <= len(all_prices)-1:
+		new_prices.append(all_prices[t])
+		t += 2
+	print(len(new_prices),new_prices)
+	return process_prices(comp,all_comp,new_prices,budget,'tunisia',freqs,caps,typems)
 
 
 
@@ -800,7 +859,7 @@ if __name__ == "__main__":
 	#for i in range(149000,500000000000000000000):
 	#ram_formattor("zz","http://www.sbsinformatique.com/tunisie-barettes-memoires","sbs")
 	#print(search_sbs("ram",500000))
-	#benchmark(search_sbs('cpu',100000000000000),"ss","ss","cpu")
-	#print(search_extreme('gpu',500000000))
-	app.run(port='5000')
+	print(benchmark(search_sbs('gpu',100000000000000),search_tunisia('gpu',500000000),"gpu"))
+	#print(gpu_val(search_tunisia('gpu',500000000)['prd'].encode('ascii', 'ignore').decode('unicode_escape'),'tunisia'))
+	#app.run(port='5000')
 	#print(gpu_val("ASUS GeForce GTX 1660 SUPER TUF GAMING 6GB OC","mega"))
