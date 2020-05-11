@@ -170,9 +170,6 @@ def ram_formattor(url,site):
 			for p in prd:
 				products.append(p.text.encode('ascii', 'ignore').decode('unicode_escape'))
 
-
-
-
 		for i in products:
 			print("vengeance" == i.lower().split(' ')[0],i.lower().split(' ')[0])
 			if "pny" in i.lower() and "8" in i.lower():
@@ -199,6 +196,50 @@ def ram_formattor(url,site):
 				typems.append("DDR4")
 
 		print( caps,typems,freqs)
+		return caps,typems,freqs
+	if site == "tunisia":
+		res = requests.get(url)
+		html = bs(res.text,'lxml')
+		#print(html)
+
+		#s = html.find_all('h2',{'class': 'h3 product-title'})
+		temp=[[y.text for y in x.findChildren('a',recursive=False)] for x in html.find_all('h2',{'class': 'h3 product-title'})]
+		#print(s)
+		all_comp = [x[0] for x in temp]
+		#print(all_comp[:-2])
+		caps = []
+		typems = []
+		freqs= []
+		capd=1
+		freqd=3
+		typemd=2
+
+		for s in all_comp[:-1]:
+			print(s)
+			count = 0
+			for i in s:
+				print(i)
+				if i.isdigit():
+					count += 1
+					if count == capd:
+						if s[s.index(i)+1] == "G":
+							caps.append(int(i))
+						elif s[s.index(i)+1] != "G":
+							caps.append(int(i+''+s[s.index(i)+1]))
+						#print("IMPORTANT ON "+i)
+					elif count == typemd:
+						typems.append("DDR"+i)
+					elif count == freqd:
+						print(count)
+						print(s.index(i))
+						print(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3])
+						freqs.append(int(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3]))
+			print(freqs,typems,caps)
+		caps.append(16)
+		freqs.append(3000)
+		typems.append("DDR4")
+		#print(all_comp)
+		print(len(caps),len(all_comp))
 		return caps,typems,freqs
 
 def cpu_formattor(cpu,site):
@@ -608,7 +649,7 @@ def search_tunisia(comp,budget):
 		caps,typems,freqs=ram_formattor(url+comp,"tunisia")
 	res = requests.get(url+comp)
 	html = bs(res.text,'lxml')
-	print(html)
+	#print(html)
 
 	#s = html.find_all('h2',{'class': 'h3 product-title'})
 	temp=[[y.text for y in x.findChildren('a',recursive=False)] for x in html.find_all('h2',{'class': 'h3 product-title'})]
@@ -622,7 +663,7 @@ def search_tunisia(comp,budget):
 	while t <= len(all_prices)-1:
 		new_prices.append(all_prices[t])
 		t += 2
-	print(len(new_prices),new_prices)
+	#print(len(new_prices),new_prices)
 	return process_prices(comp,all_comp,new_prices,budget,'tunisia',freqs,caps,typems)
 
 
