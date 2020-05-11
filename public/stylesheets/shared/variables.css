@@ -7,4 +7,7 @@
     --clr-bck-dark: hsl(var(--clr-base-hue), var(--clr-base-sat), 8%);
     --clr-bck-light: hsl(var(--clr-base-hue), var(--clr-base-sat), 16%);
     --clr-txt-light: hsl(var(--clr-base-hue), var(--clr-base-sat), 87%);
+    --pseudo-font: 20px;
+    --pseudo-height: 1.5;
+    --icon-url: url(../icons/cpu.svg);
 }
