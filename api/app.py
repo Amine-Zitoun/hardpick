@@ -21,16 +21,27 @@ https://www.scoop.com.tn/'''
 
 def search_intense(key,l):
 	print("zbi?")
-	for i in l:
-		#print("CHECKING "+key+" with "+i)
-		print("checking ",i,"with ",key)
-		if key in i:
+	c = 0
+	if ''.join(key.split(' ')) in [''.join(i.split('@')[0].split(' ')) for i in l]:
+		for i in l:
+			if ''.join(i.split('@')[0].split(' ')) == ''.join(key.split(' ')):
+				return i
+			else:
+				pass
+	else:
+		for i in l:
 			#print("CHECKING "+key+" with "+i)
-			print('FOUND MATCH')
-			return i
-		else:
-			pass
-	return "not found"
+			print("checking ",i,"with ",key)
+			if key in i:
+				#print("CHECKING "+key+" with "+i)
+				print('FOUND MATCH')
+				return i
+			else:
+				pass
+		return "not found"
+
+
+
 
 
 
@@ -197,7 +208,7 @@ def cpu_formattor(cpu,site):
 			res_word=word[1:]
 		else:
 			res_word = word
-
+		print(res_word[2])
 		if res_word[0].lower() == "intel":
 			key = res_word[0] +' '+ res_word[1] +' '+ res_word[2] 
 		elif res_word[0].lower() == "amd":
@@ -208,7 +219,7 @@ def cpu_formattor(cpu,site):
 		if res_word[0].lower() == "amd":
 			key = cpu.lower()
 		if res_word[0].lower() == "cpu":
-			key = res_word[1]+' '+res_word[2]+' '+res_word[3]
+			key = res_word[1]+' '+'core'+' '+res_word[2]+'-'+res_word[3]
 		if res_word[0].lower() == "intel":
 			if res_word[1].lower() == "i9":
 				key = res_word[1]+'-'+res_word[2]
@@ -221,8 +232,24 @@ def cpu_formattor(cpu,site):
 		if res_word[0].lower().startswith('pro'):
 			key = ' '.join(res_word[1:])
 		return key
+	if site == "tunisia":
+		word = cpu.split(' ')
+		res_word = word[1:]
+		if res_word[0].lower() == "intel":
+			if res_word[1].lower() == "core":
+				if res_word[2].lower().startswith('c'):
+					key = res_word[0] + ' '+res_word[1] + ' '+res_word[4]
+				else:
+					key = res_word[0] + ' '+res_word[1]+ ' '+res_word[2]
+			else:
+				key= "idk"
 
-
+		if res_word[0].lower() == "amd":
+			if res_word[2].lower() == "tm":
+				key = res_word[0]+ ' '+res_word[1]+ ' '+res_word[3]+ ' '+res_word[4]
+			else:
+				key = res_word[0]+ ' '+res_word[1]+ ' '+res_word[2]+ ' '+res_word[3]
+		return key
 
 	#return res_cpu.lower()
 
@@ -395,20 +422,20 @@ def benchmark(c1,c2,comp):
 		print("[*] CHCKED ON DB AND FOUND: "+res1)
 
 		# gets value
-		if res1 != "not found":	
-			vl1=final_res[res1]
+		if res1 == "not found":	
+			vl1=0
 		else:
-			vl1 = 0
+			vl1 = final_res[res1]
 		#same process for 2
 		key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
 		print("[*] TURNED IT INTO: "+key2)
 		print(parts)
 		res2= search_intense(key2.lower(),parts)
 		print("[*] CHCKED ON DB AND FOUND: "+res2)
-		if res2 != "not found":	
-			vl2=final_res[res2]
+		if res2 == "not found":	
+			vl2=0
 		else:
-			vl2 = 0
+			vl2 = final_res[res2]
 
 		#compares values
 
@@ -438,7 +465,10 @@ def benchmark(c1,c2,comp):
 		res1= search_intense(key1.lower(),parts)
 		print("[*] CHCKED ON DB AND FOUND: "+res1)
 		# gets value
-		vl1=final_res[res1]
+		if res1 == "not found":	
+			vl1=0
+		else:
+			vl1 = final_res[res1]
 
 		# same process
 		key2 = cpu_formattor(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
@@ -447,7 +477,10 @@ def benchmark(c1,c2,comp):
 		print(parts)
 		res2= search_intense(key2.lower(),parts)
 		print("[*] CHCKED ON DB AND FOUND: "+res2)
-		vl2=final_res[res2]
+		if res2 == "not found":	
+			vl2=0
+		else:
+			vl2 = final_res[res2]
 
 		# compares vls
 		if vl1 >= vl2:
@@ -840,14 +873,16 @@ def res():
 	extrme_prd =extrme['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 	
 	# Search tunisianet
-	#tn = search_tunisia(comp,budget)
-	#tn_prd =tn['prd'].encode('ascii', 'ignore').decode('unicode_escape')
+	tn = search_tunisia(comp,budget)
+	tn_prd =tn['prd'].encode('ascii', 'ignore').decode('unicode_escape')
 
 	#print(mega_prd)
 	# benchmark all products
-	win1 = benchmark(sbs,mega,comp)
-	win2 = benchmark(win1,extrme,comp)
-	result = {'data': [mega,sbs,extrme],'win': win2}
+	win1 = benchmark(sbs,tn,comp)
+	win2 = benchmark(mega,extrme,comp)
+
+	final = benchmark(win1,win2,comp)
+	result = {'data': [mega,sbs,extrme,tn],'win': final}
 	return jsonify(result)
 #api.add_resource(get_comp, '/get_comp/<comp>/<budget>')
 @app.route('/')
@@ -859,7 +894,7 @@ if __name__ == "__main__":
 	#for i in range(149000,500000000000000000000):
 	#ram_formattor("zz","http://www.sbsinformatique.com/tunisie-barettes-memoires","sbs")
 	#print(search_sbs("ram",500000))
-	print(benchmark(search_sbs('gpu',100000000000000),search_tunisia('gpu',500000000),"gpu"))
+	#print(benchmark(search_sbs('gpu',100000000000000),search_tunisia('gpu',500000000),"gpu"))
 	#print(gpu_val(search_tunisia('gpu',500000000)['prd'].encode('ascii', 'ignore').decode('unicode_escape'),'tunisia'))
-	#app.run(port='5000')
+	app.run(port='5000')
 	#print(gpu_val("ASUS GeForce GTX 1660 SUPER TUF GAMING 6GB OC","mega"))
