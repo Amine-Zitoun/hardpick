@@ -2,8 +2,7 @@
 :root {
     --clr-base-hue: 0;
     --clr-base-sat: 0%;
-    --clr-danger-hue-offset: 180;
-    --clr-danger-hue: calc(var(--clr-base-hue) - var(--clr-danger-hue-offset));
+    --clr-danger-hue: 30;
     --clr-bck-dark: hsl(var(--clr-base-hue), var(--clr-base-sat), 8%);
     --clr-bck-light: hsl(var(--clr-base-hue), var(--clr-base-sat), 16%);
     --clr-txt-light: hsl(var(--clr-base-hue), var(--clr-base-sat), 87%);
