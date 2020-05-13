@@ -16,7 +16,7 @@ body {
 }
 
 .header-nav {
-    margin-bottom: 90px;
+    margin-bottom: 0px;
 }
 
 .container {
@@ -28,9 +28,25 @@ body {
 .inner-container {
     margin: 0 2rem;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     align-items: center;
     min-height: 45vh;
+}
+
+.error-message {
+    width: 100%;
+    padding: 10px 10px;
+    font-size: 0.8rem;
+    display: block;
+    background-color: hsl(var(--clr-danger-hue), 100%, 50%);
+    text-align: center;
+    color: white;
+}
+
+.error-message + .inner-container .main {
+    margin-top: 50px;
 }
 
 .main {
@@ -41,6 +57,7 @@ body {
     border-radius: 5px;
     width: 900px;
     height: 485px;
+    margin-top: 90px;
 }
 
 .content {
@@ -137,14 +154,14 @@ body {
 }
 
 .inp-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     flex-grow: 1;
     margin-bottom: 20px;
 }
 
 .inp-title-last {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     flex-grow: 1;
     margin-bottom: 20px;
@@ -268,6 +285,8 @@ body {
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 input[type=number]::-webkit-inner-spin-button {

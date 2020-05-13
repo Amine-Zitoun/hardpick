@@ -5,6 +5,7 @@ const optionsContainer = document.querySelectorAll(".option-container");
 const optionsList = document.querySelectorAll(".option");
 
 selectedList[0].innerHTML = selectedList[0].parentNode.children[0].getElementsByClassName("option")[0].getElementsByTagName("label")[0].innerHTML;
+optionsList[0].querySelector("input").checked = true;
 
 selectedList.forEach(selected => {
     selected.addEventListener("click", () => {
@@ -16,6 +17,7 @@ optionsList.forEach(option => {
     const selectText = option.parentNode.parentNode.getElementsByClassName("selected")[0];
     option.addEventListener("click", () => {
         selectText.innerHTML = option.querySelector("label").innerHTML;
+        option.querySelector("input").checked = true;
         option.parentNode.classList.remove("active");
         updateCurrency(selectText, option);
         updateIcon(selectText, option);
