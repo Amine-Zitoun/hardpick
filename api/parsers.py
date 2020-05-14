@@ -63,9 +63,10 @@ def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
 			 'prd': r[-1][0],
 			"typem": typem,
 			 "cap":cap,
-			 'frq': freq}
+			 'frq': freq,
+			 'pr': 'lower'}
 	except IndexError:
-		final_shit ={'site': site,'price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0}
+		final_shit ={'site': site,'price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0,'pr':'higher'}
 	return final_shit
 
 
@@ -332,8 +333,8 @@ def search_sbs(comp,budget):
 			 'prd': r[-1][0],
 			"typem": typem,
 			 "cap":cap,
-			 'frq': freq}
+			 'frq': freq,'pr':'lower'}
 	except IndexError:
-		final_shit ={'site': 'sbs','price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0 }
+		final_shit ={'site': 'sbs','price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0 ,'pr':'higher'}
 	return final_shit
 

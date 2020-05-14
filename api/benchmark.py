@@ -41,32 +41,37 @@ def benchmark(c1,c2,comp):
 
 		# FORMATS THE NAME OF THE PRODUCT 
 		print("[*] FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
-
-		key1 = gpu_val(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
-
-		print("[*] TURNED IT INTO: "+key1)
-		#print(parts)
-
-		# searches in the learderboard
-
-		res1= search_intense(key1.lower(),parts)
-		print("[*] CHCKED ON DB AND FOUND: "+res1)
-
-		# gets value
-		if res1 == "not found":	
-			vl1=0
+		if c1['pr'] == "higher":
+			vl1 = 0
 		else:
-			vl1 = final_res[res1]
+			key1 = gpu_val(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
+
+			print("[*] TURNED IT INTO: "+key1)
+			#print(parts)
+
+			# searches in the learderboard
+
+			res1= search_intense(key1.lower(),parts)
+			print("[*] CHCKED ON DB AND FOUND: "+res1)
+
+			# gets value
+			if res1 == "not found":	
+				vl1=0
+			else:
+				vl1 = final_res[res1]
 		#same process for 2
-		key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
-		print("[*] TURNED IT INTO: "+key2)
-		print(parts)
-		res2= search_intense(key2.lower(),parts)
-		print("[*] CHCKED ON DB AND FOUND: "+res2)
-		if res2 == "not found":	
-			vl2=0
+		if c2['pr'] == "higher":
+			vl2 = 0
 		else:
-			vl2 = final_res[res2]
+			key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
+			print("[*] TURNED IT INTO: "+key2)
+			print(parts)
+			res2= search_intense(key2.lower(),parts)
+			print("[*] CHCKED ON DB AND FOUND: "+res2)
+			if res2 == "not found":	
+				vl2=0
+			else:
+				vl2 = final_res[res2]
 
 		#compares values
 
@@ -90,28 +95,34 @@ def benchmark(c1,c2,comp):
 
 
 		# FORMATS THE NAME OF THE PRODUCT 
-		key1 = cpu_formattor(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
-		print("[*]  FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
-		print("[*] TURNED IT INTO: "+key1)
-		res1= search_intense(key1.lower(),parts)
-		print("[*] CHCKED ON DB AND FOUND: "+res1)
-		# gets value
-		if res1 == "not found":	
-			vl1=0
+		if c1['pr'] == "higher":
+			vl1 = 0
 		else:
-			vl1 = final_res[res1]
+			key1 = cpu_formattor(c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c1['site'])
+			print("[*]  FOUND ON SITE: "+c1['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
+			print("[*] TURNED IT INTO: "+key1)
+			res1= search_intense(key1.lower(),parts)
+			print("[*] CHCKED ON DB AND FOUND: "+res1)
+			# gets value
+			if res1 == "not found":	
+				vl1=0
+			else:
+				vl1 = final_res[res1]
 
 		# same process
-		key2 = cpu_formattor(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
-		print("[*]  FOUND ON SITE: "+c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
-		print("[*] TURNED IT INTO: "+key2)
-		print(parts)
-		res2= search_intense(key2.lower(),parts)
-		print("[*] CHCKED ON DB AND FOUND: "+res2)
-		if res2 == "not found":	
-			vl2=0
+		if c2['pr'] == "higher":
+			vl2 = 0
 		else:
-			vl2 = final_res[res2]
+			key2 = cpu_formattor(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
+			print("[*]  FOUND ON SITE: "+c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'))
+			print("[*] TURNED IT INTO: "+key2)
+			print(parts)
+			res2= search_intense(key2.lower(),parts)
+			print("[*] CHCKED ON DB AND FOUND: "+res2)
+			if res2 == "not found":	
+				vl2=0
+			else:
+				vl2 = final_res[res2]
 
 		# compares vls
 		if vl1 >= vl2:
