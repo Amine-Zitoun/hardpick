@@ -307,7 +307,7 @@ def gpu_val(gpu,site):
 
 		word = gpu.split(' ')
 		res_word = word[1:]
-
+		print(res_word[3].lower())
 		if res_word[3].lower() == "super":
 			key = res_word[0]+' '+res_word[1]+' '+res_word[2]+' '+res_word[3]
 		else:
