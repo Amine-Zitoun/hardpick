@@ -304,6 +304,7 @@ def gpu_val(gpu,site):
 				key = res_word[1]+' '+res_word[2]+' '+res_word[3]
 			return key
 	if site == "mega":
+
 		word = gpu.split(' ')
 		res_word = word[1:]
 
@@ -312,6 +313,7 @@ def gpu_val(gpu,site):
 		else:
 			key = res_word[0]+' '+res_word[1]+' '+res_word[2]
 		return key.lower()
+
 	if site == "extreme":
 		res_word = gpu.split(' ')
 		if res_word[0].lower() == "geforce":
