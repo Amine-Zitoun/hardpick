@@ -8,8 +8,10 @@ from formattors import *
 
 
 def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
-	comp_prices = dict(zip(all_comp,prices))
-	print(caps,typems,freqs,site)
+	comp_prices = dict(zip(all_comp,[float(x) for x in prices]))
+	r1 = sorted(comp_prices.items(), key=lambda item: item[1])
+	#print(caps,typems,freqs,site)
+	print(r1)
 	#print(comp_prices)
 	final_comp =[]
 	final_price =[]
@@ -63,7 +65,7 @@ def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
 			 "cap":cap,
 			 'frq': freq}
 	except IndexError:
-		final_shit ={'site': site,'price': 0.0,'prd':'',"typem": 0,"cap":0,"frq": 0}
+		final_shit ={'site': site,'price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0}
 	return final_shit
 
 
@@ -272,6 +274,8 @@ def search_sbs(comp,budget):
 	print(status)
 	prices = [x.text.split('D')[0].replace(',','')+"000" for x in html.find_all('b',{'class': 'bordeau14'})]
 	comp_prices = dict(zip(all_comp,prices))
+	fc = []
+	fp = []
 
 	# vars
 	final_comp =[]
@@ -281,7 +285,8 @@ def search_sbs(comp,budget):
 	final_typem=[]
 	final_cap=[]
 	i = 0
-
+	
+	#print(r1)
 	# get all products with price lower then budget and update ram data
 	for key,val in comp_prices.items():
 		if val == "N.C 000":
@@ -299,8 +304,12 @@ def search_sbs(comp,budget):
 				final_price.append(float(val))
 			else:
 				pass
+		else:
+			fc.append(key)
+			fp.append(float(val))
 		i += 1
-
+	comp_prices2 = dict(zip(fc,fp))
+	r1 = sorted(comp_prices2.items(), key=lambda item: item[1])
 	# store in dict
 	dict_res=  dict(zip(final_comp,final_price))
 	# sort dict
@@ -325,6 +334,6 @@ def search_sbs(comp,budget):
 			 "cap":cap,
 			 'frq': freq}
 	except IndexError:
-		final_shit ={'site': 'sbs','price': 0.0,'prd':'',"typem": 0,"cap":0,"frq": 0 }
+		final_shit ={'site': 'sbs','price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0 }
 	return final_shit
 
