@@ -6,6 +6,7 @@ const express = require("express");
 const app = express();
 const expressLayouts = require("express-ejs-layouts");
 const bodyParser = require("body-parser");
+const cors = require("cors")
 
 const indexRouter = require("./routes/index");
 const searchRouter = require("./routes/search");
@@ -15,6 +16,7 @@ app.set("views", __dirname + "/views")
 app.set("layout", "layouts/layout")
 app.use(expressLayouts)
 app.use(express.static("public"))
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}))
 
 const mongoose = require("mongoose");
