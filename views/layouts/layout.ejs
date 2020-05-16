@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <script defer type="module" src="/javascripts/custom-select.js"></script>
     <script defer type="module" src="/javascripts/currency.js"></script>
     <script defer type="module" src="/javascripts/update-icon.js"></script>
     <script defer type="module" src="/javascripts/loader.js"></script>
+    <script defer type="module" src="/javascripts/showResult.js"></script>
     <title>pickerAlpha</title>
 </head>
 <body>
@@ -19,5 +21,13 @@
             <%- body %>
         </div>
     </div>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            offset: 200,
+            duration: 400,
+            startEvent: "load",
+        });
+    </script>
 </body>
 </html>

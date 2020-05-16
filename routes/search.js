@@ -27,12 +27,19 @@ router.post("/", (req, res) => {
                 newPrice = price * 1000;
                 break;
         }
-        getData(comp, newPrice);
+        getData(comp, newPrice, res);
+
+        return
     }
 })
 
+router.get("/end", (req, res) => {
+    recieved = false;
+    res.json(recieved);
+    console.log(recieved);
+})
 
-function getData(comp, newPrice) {
+function getData(comp, newPrice, res) {
     const api = `https://alphapicker.herokuapp.com/api/?comp=${comp}&budget=${newPrice}`;
     axios.get(api)
         .then((response) => {
@@ -40,6 +47,7 @@ function getData(comp, newPrice) {
             const data = response.data;
             console.log(data);
             console.log(recieved)
+            res.status(204).send()
         })
 }
 

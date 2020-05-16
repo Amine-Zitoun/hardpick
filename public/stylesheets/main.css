@@ -8,6 +8,7 @@
 }
 *, *::before, *::after {
     box-sizing: border-box;
+    outline: none;
 }
 body {
     background: linear-gradient(to right, var(--clr-bck-dark), var(--clr-bck-light));
@@ -46,7 +47,7 @@ body {
 }
 
 .error-message + .inner-container .main {
-    margin-top: 35px;
+    margin-top: 45px;
 }
 
 .main {
@@ -57,7 +58,7 @@ body {
     border-radius: 5px;
     width: 900px;
     height: 485px;
-    margin-top: 75px;
+    margin-top: 85px;
 }
 
 .content {
@@ -187,6 +188,7 @@ body {
     height: 34px;
     line-height: -1;
     text-align: start;
+    outline: none;
 }
 
 .selected::after {
@@ -200,6 +202,7 @@ body {
     right: 10px;
     top: 1px;
     transition: all 0.4s;
+    outline: none;
 }
 
 .select-box .option-container {
@@ -291,6 +294,11 @@ body {
     cursor: pointer;
     font-size: 15px;
     font-weight: 600;
+    transition: transform .2s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.1);
 }
 
 .btn-primary.spin {
@@ -298,11 +306,12 @@ body {
 }
 
 .spinner.active {
-    border: 10px solid #222;
+    margin-top: -10px;;
+    border: 5px solid #222;
     border-radius: 50%;
-    border-top: 10px solid white;
-    width: 50px;
-    height: 50px;
+    border-top: 5px solid white;
+    width: 70px;
+    height: 70px;
     animation: spin 1s linear infinite;
 }
 
@@ -311,7 +320,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .money input {
-    margin-left: -25px;
+    margin-left: -15px;
     font-weight: 700;
     width: 90px;
     height: 34px;
@@ -348,4 +357,22 @@ input[type=number]::-webkit-inner-spin-button {
     font-size: var(--pseudo-font);
     border-top-right-radius: 0.25em;
     border-bottom-right-radius: 0.25em;
+}
+
+.res {
+    opacity: 0;
+}
+
+.res.on {
+    opacity: 1;
+    display: block;
+    max-width: 90%;
+    color: white;
+    background-color: hsl(0, 0%, 8%);
+    box-shadow: 0 5px 10px white;
+    border-radius: 5px;
+    width: 900px;
+    height: 485px;
+    margin-top: 35vh;
+    margin-bottom: 10vh;
 }

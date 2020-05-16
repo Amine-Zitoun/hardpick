@@ -8,6 +8,9 @@ selectedList[0].innerHTML = selectedList[0].parentNode.children[0].getElementsBy
 optionsList[0].querySelector("input").checked = true;
 
 selectedList.forEach(selected => {
+    selected.onblur = function() {
+        selected.parentNode.getElementsByClassName("option-container")[0].classList.remove("active");
+    }
     selected.addEventListener("click", () => {
         selected.parentNode.getElementsByClassName("option-container")[0].classList.toggle("active");
     })
@@ -23,3 +26,4 @@ optionsList.forEach(option => {
         updateIcon(selectText, option);
     })
 })
+
