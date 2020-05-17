@@ -64,7 +64,7 @@ def process_prices(comp,all_comp,prices,budget,site,freqs,caps,typems):
 			"typem": typem,
 			 "cap":cap,
 			 'frq': freq,
-			 'pr': 'lower'}
+			 'pr': 'lower',}
 	except IndexError:
 		final_shit ={'site': site,'price': r1[0][1],'prd':r1[0][0],"typem": 0,"cap":0,"frq": 0,'pr':'higher'}
 	return final_shit
@@ -320,10 +320,12 @@ def search_sbs(comp,budget):
 		freq = final_frq[list(dict_res.keys()).index(r[-1][0])]
 		cap  = final_cap[list(dict_res.keys()).index(r[-1][0])]
 		typem = final_typem[list(dict_res.keys()).index(r[-1][0])]
+		pr2 = "lower"
 	except:
 		freq= 0
 		cap = 0
 		typem=0
+		pr2="higher"
 
 	try:
 
