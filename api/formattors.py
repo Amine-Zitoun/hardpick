@@ -295,11 +295,11 @@ def gpu_val(gpu,site):
 						key = res_word[3]
 					else:
 						key = res_word[3] + ' '+res_word[4] + ' '+res_word[5]
-			elif res_word[1].lower() == "tuf":
-				if c:
-					key  = res_word[2] + ' '+res_word[3]+' '+res_word[4]
-				elif res_word[2].lower() == "3-":
+			elif res_word[1].lower() == "tuf":					
+				if res_word[2].lower() == "3-":
 					key = res_word[3]
+				else:
+					key  = res_word[2] + ' '+res_word[3]+' '+res_word[4]
 			elif res_word[1].lower() == "gtx":
 				key = res_word[1]+' '+res_word[2]+' '+res_word[3]
 			return key
