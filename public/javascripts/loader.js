@@ -1,4 +1,6 @@
 import {doubleScreen} from './showResult.js';
+import {noError} from './validInput.js';
+import {showWin} from './fillWinner.js';
 
 const button = document.querySelector(".btn-primary");
 const spinner = document.querySelector(".spinner");
@@ -29,7 +31,9 @@ function apiResponded() {
                 response.json()
                     .then(data => {
                         if (data) {
+                            noError();
                             buttonToSpin();
+                            showWin();
                             end();
                             doubleScreen(res);
                             window.scroll({

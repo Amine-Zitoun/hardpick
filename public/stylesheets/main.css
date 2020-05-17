@@ -46,6 +46,10 @@ body {
     color: white;
 }
 
+.error-message.none {
+    display: none;
+}
+
 .error-message + .inner-container .main {
     margin-top: 45px;
 }
@@ -360,11 +364,12 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .res {
-    opacity: 0;
+    height: 0;
+    overflow: hidden;
 }
 
 .res.on {
-    opacity: 1;
+    height: auto;
     display: block;
     max-width: 90%;
     color: white;
@@ -372,7 +377,56 @@ input[type=number]::-webkit-inner-spin-button {
     box-shadow: 0 5px 10px white;
     border-radius: 5px;
     width: 900px;
-    height: 485px;
-    margin-top: 35vh;
-    margin-bottom: 10vh;
+    height: 400px;
+    margin-top: 240px;
+    margin-bottom: 150px;
+}
+
+.general2 {
+    margin-left: 20px;
+    font-size: 2em;
+    margin-bottom: 45px;
+}
+
+.general2.sorry {
+    margin-left: 20px;
+    font-size: 1.6em;
+    margin-bottom: 20px;
+}
+
+.won {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 40px;
+    margin-left: 20px;
+}
+
+.stored {
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+
+.link {
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+
+.link a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.priced {
+    font-size: 1.4em;
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.cash {
+    padding-top: 8px;
 }
