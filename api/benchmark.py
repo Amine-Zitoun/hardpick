@@ -134,14 +134,24 @@ def benchmark(c1,c2,comp):
 	
 	elif comp == "ram":
 		# gets ram data from both
+		if c1['pr'] == "lower":
+			frq1 = int(c1['frq'])
+			cap1 = int(c1['cap'])
+			typem1 = c1['typem']
+		else:
+			frq1 = 0
+			cap1=0
+			typem1="DDR0"
 
-		frq1 = int(c1['frq'])
-		cap1 = int(c1['cap'])
-		typem1 = c1['typem']
 
-		frq2 = int(c2['frq'])
-		cap2 = int(c2['cap'])
-		typem2 = c2['typem']
+		if c2['pr'] == "lower":
+			frq2 = int(c2['frq'])
+			cap2 = int(c2['cap'])
+			typem2 = c2['typem']
+		else:
+			frq2 = 0
+			cap2=0
+			typem2="DDR0"
 
 		pt1=0
 		pt2=0
