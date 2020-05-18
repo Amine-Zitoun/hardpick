@@ -128,7 +128,7 @@ def search_extreme(comp,budget):
 		for p,pr in zip(prd,price):
 			products.append(p.text)
 			prices.append(float(pr.text.split('.')[0].replace(',','')+"000"))
-	print(dict(zip(products,prices)))
+	#print(dict(zip(products,prices)))
 	return process_prices(comp,products,prices,budget,'extreme',freqs,caps,typems)
 
 
@@ -169,7 +169,66 @@ def search_megapc(comp,budget):
 	typems=[]
 	if comp == "gpu":
 		comp = "carte-graphique"
-		url = "https://www.mega-pc.net/boutique/composants/"+comp
+		#url = "https://www.mega-pc.net/boutique/composants/"+comp
+		url1 = "https://www.mega-pc.net/boutique/composants/"+comp
+		
+		res1 = requests.get(url1)
+		html1 = bs(res1.text,'lxml')
+		
+		#print(html)
+
+		prices1=[]
+		#prices2=[]
+
+		all_comp1 = [x.text for x in html1.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
+
+
+		for i in html1.find_all('span',{'class': 'price'}):
+			if i.text.count("T") > 1:
+				prices1.append(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+			else:
+				prices1.append(i.text.split('\xa0')[0].replace(',','')+"000")
+			#print(i.text)
+			#print("\n\n")
+
+
+		for x in range(2,4):
+			print(x)
+			try:
+				url2 = "https://www.mega-pc.net/boutique/composants/"+comp+"/page/"+str(x)+"/"
+				res2 = requests.get(url2)
+			except Exception as e:
+				#print(e)
+				break
+			html2 = bs(res2.text,'lxml')
+
+
+		#prices1 = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html1.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
+			all_comp1 += [x.text for x in html2.find_all('h2',{'class': 'woocommerce-loop-product__title'})]
+			prices2=[]
+			for i in html2.find_all('span',{'class': 'price'}):
+				#print(i.text.count("T"))
+				if i.text.count("T") == 2:
+					prices2.append(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+				else:
+					prices2.append(i.text.split('\xa0')[0].replace(',','')+"000")
+			prices1 += prices2
+
+		#prices2 = [x.text.split('\xa0')[0].replace(',','')+"000" for x in html2.find_all('span',{'class': 'woocommerce-Price-amount amount'})]
+		#print(len(all_comp1),len(prices1))
+		#print("=======================")
+		#print(all_comp1[-1])
+		#print()
+		#print(all_comp2)
+		#print(len(prices2),len(all_comp2))
+		#print(dict(zip(all_comp2,prices2)))
+		#prices = prices1+prices2
+		#all_comp = all_comp1+all_comp2
+		#print(len(prices),len(all_comp))
+		#print(len(prices1),len(prices2))
+		#print(len(all_comp1),len(all_comp2))
+		#print(dict(zip(all_comp,prices)))
+		return process_prices(comp,all_comp1,prices1,budget,'mega',freqs,caps,typems)
 	if comp == "cpu":
 		comp = "processeur"
 		url1 = "https://www.mega-pc.net/boutique/composants/"+comp
@@ -180,14 +239,16 @@ def search_megapc(comp,budget):
 		html2 = bs(res2.text,'lxml')
 		#print(html)
 		print("")
+
+		'''
 		for i in html2.find_all('span',{'class': 'price'}):
 			if i.text.count("T") > 1:
-				print(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
+				#print(i.text.split(" ")[1].split('\xa0')[0].replace(',','')+"000")
 			else:
 				print(i.text.split('\xa0')[0].replace(',','')+"000")
 			#print(i.text)
 			print("\n\n")
-
+		'''
 		prices1=[]
 		prices2=[]
 
@@ -272,7 +333,7 @@ def search_sbs(comp,budget):
 	html=bs(res.text,"lxml")
 	all_comp = [x.text for x in html.find_all('b',{'class': 'VignBlue'})]
 	status = [x.text.split('\xa0')[0] for x in html.find_all('span',{'class': 'DispoNew'})]
-	print(status)
+	#print(status)
 	prices = [x.text.split('D')[0].replace(',','')+"000" for x in html.find_all('b',{'class': 'bordeau14'})]
 	comp_prices = dict(zip(all_comp,prices))
 	fc = []
