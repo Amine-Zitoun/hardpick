@@ -46,7 +46,7 @@ def ram_formattor(url,site):
 		freqs= []
 		for s in all_comp:
 			
-			print("testing on "+s)
+			#print("testing on "+s)
 			count = 0
 
 			capd=None
@@ -188,16 +188,16 @@ def ram_formattor(url,site):
 					elif count == typemd:
 						typems.append("DDR"+i)
 					elif count == freqd:
-						print(count)
-						print(s.index(i))
-						print(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3])
+						#print(count)
+						#print(s.index(i))
+						#print(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3])
 						freqs.append(int(i+s[s.index(i)+1]+s[s.index(i)+2]+s[s.index(i)+3]))
-			print(freqs,typems,caps)
+			#print(freqs,typems,caps)
 		caps.append(16)
 		freqs.append(3000)
 		typems.append("DDR4")
 		#print(all_comp)
-		print(len(caps),len(all_comp))
+		#print(len(caps),len(all_comp))
 		return caps,typems,freqs
 
 def cpu_formattor(cpu,site):
@@ -307,7 +307,7 @@ def gpu_val(gpu,site):
 
 		word = gpu.split(' ')
 		res_word = word[1:]
-		print(res_word[3].lower())
+		#print(res_word[3].lower())
 		if res_word[3].lower() == "super":
 			key = res_word[0]+' '+res_word[1]+' '+res_word[2]+' '+res_word[3]
 		else:
@@ -341,7 +341,7 @@ def gpu_val(gpu,site):
 	if site == "tunisia":
 		word =gpu.split(' ')
 		res_word =word[2:]
-		print(res_word)
+		#print(res_word)
 		if res_word[0].lower() == "palit":
 			if res_word[1].lower() == "geforce":
 				if res_word[2].lower() == "gt":

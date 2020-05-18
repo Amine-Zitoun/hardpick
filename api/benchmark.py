@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup as bs
 from formattors import *
 
 def search_intense(key,l):
-	print("zbi?")
+	#print("zbi?")
+	#print(key)
 	c = 0
 	if ''.join(key.split(' ')) in [''.join(i.split('@')[0].split(' ')) for i in l]:
 		for i in l:
@@ -13,13 +14,19 @@ def search_intense(key,l):
 				return i
 			else:
 				pass
+	elif ''.join(key.split(' ')) in [''.join(i.split(' ')) for i in l]:
+		for i in l:
+			if ''.join(i.lower().split(' ')) == ''.join(key.lower().split(' ')):
+				return i
+			else:
+				pass
 	else:
 		for i in l:
 			#print("CHECKING "+key+" with "+i)
-			print("checking ",i,"with ",key)
+			#print("checking ",i,"with ",key)
 			if key in i:
 				#print("CHECKING "+key+" with "+i)
-				print('FOUND MATCH')
+				#print('FOUND MATCH')
 				return i
 			else:
 				pass
@@ -27,7 +34,7 @@ def search_intense(key,l):
 
 
 def benchmark(c1,c2,comp):
-	print(c1,c2)
+	#print(c1,c2)
 	if comp == "gpu":
 		# GET ALL THE PARTS FROM THE LEADERBOARD
 
@@ -65,7 +72,7 @@ def benchmark(c1,c2,comp):
 		else:
 			key2 = gpu_val(c2['prd'].encode('ascii', 'ignore').decode('unicode_escape'),c2['site'])
 			print("[*] TURNED IT INTO: "+key2)
-			print(parts)
+			#print(parts)
 			res2= search_intense(key2.lower(),parts)
 			print("[*] CHCKED ON DB AND FOUND: "+res2)
 			if res2 == "not found":	
