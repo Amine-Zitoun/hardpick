@@ -7,7 +7,6 @@
             <div class="wlc">Welcome to ALPHAPICKER</div>
             <div class="explain">Select what is below and you are set</div>
         </div>
-        <form action="/search" method="POST">
             <div class="all">
                 <div class="data-inputs">
                     <div class="detail">
@@ -27,7 +26,7 @@
                                     <label for="ram">RAM</label>
                                 </div>
                             </div>
-                            <div class="selected" tabindex="1"></div>
+                            <div class="selected" tabindex="1" id="comp"></div>
                         </div>
                     </div>
                     <div class="detail-mid">
@@ -39,18 +38,18 @@
                                     <label for="tn">Tunisia</label>
                                 </div>
                             </div>
-                            <div class="selected" tabindex="2">Pick an item</div>
+                            <div class="selected" tabindex="2" id="region">Pick an item</div>
                         </div>
                     </div>
                     <div class="detail">
                         <div class="inp-title-last"><label>Budget</label></div>
                         <div class="money" money-content="?">
-                            <input tabindex="3 " type="number" name="price">
+                            <input tabindex="3 " type="number" name="price" id="price">
                         </div>
                     </div>    
                 </div>
                 <div class="btn-row">
-                    <button class="btn-primary" type="submit">Search</button>
+                    <button class="btn-primary">Search</button>
                     <div class="spinner"></div>
                 </div>
             </div>       

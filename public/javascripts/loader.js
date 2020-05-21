@@ -1,54 +1,17 @@
 import {doubleScreen} from './showResult.js';
-import {noError} from './validInput.js';
+import {checkErr, noErr} from './inputValidation.js';
 import {showWin} from './fillWinner.js';
 
 const button = document.querySelector(".btn-primary");
 const spinner = document.querySelector(".spinner");
 const res = document.querySelector(".res");
-
-button.addEventListener("click", () => {
-    apiResponded();
-    setTimeout(() => {
-        buttonToSpin();
-    }, 200)
-})
+const errContainer = document.getElementsByClassName("error-message")[0];
 
 function buttonToSpin () {
     button.classList.toggle("spin");
     spinner.classList.toggle("active")
 }
 
-function end() {
-    fetch("http://localhost:3000/search/end")
-        .then(response => response.json())
-        .then(data => console.log(data))
-}
-
-function apiResponded() {
-    fetch("http://localhost:3000/search")
-        .then(response => {
-            if (response.ok) {
-                response.json()
-                    .then(data => {
-                        if (data) {
-                            noError();
-                            buttonToSpin();
-                            showWin();
-                            end();
-                            doubleScreen(res);
-                            window.scroll({
-                                top :findPos(document.getElementById("res")),
-                                behavior: 'smooth'
-                            });
-                        } else {
-                            apiResponded();
-                        }
-                    })
-            } else {
-                console.log("fetch failure")
-            }
-        }).catch(err => console.log(err))
-}
 
 function findPos(obj) {
     var curtop = 0;
@@ -59,3 +22,43 @@ function findPos(obj) {
     return curtop;
     }
 }
+
+function masterFunc() {
+    let valid = checkErr(errContainer);
+    if (valid) {
+        noErr(errContainer)
+        buttonToSpin();
+        let comp = document.getElementById("comp").innerHTML.toLowerCase();
+        let region = document.getElementById("region").innerHTML.toLowerCase();
+        let price = +(document.getElementById("price").value);
+        fetch("http://localhost:3000/search", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                comp: comp,
+                region: region,
+                price: price
+            })
+        }).then(data => {
+            return data.json()
+        }).then(resp => {
+            buttonToSpin();
+            showWin(resp);
+            doubleScreen(res);
+            window.scroll({
+                top :findPos(document.getElementById("res")),
+                behavior: 'smooth'
+            });
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+}
+
+
+button.addEventListener("click", () => {
+    masterFunc();
+})
