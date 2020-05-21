@@ -14,6 +14,7 @@ body {
     background: linear-gradient(to right, var(--clr-bck-dark), var(--clr-bck-light));
     margin: 0;
     padding: 0;
+    min-height: 100vh;
 }
 
 .header-nav {
@@ -37,21 +38,17 @@ body {
 }
 
 .error-message {
+    display: none;
+}
+
+.error-message.on {
     width: 100%;
-    padding: 10px 10px;
-    font-size: 0.8rem;
+    padding: 15px 10px;
+    font-size: 0.9rem;
     display: block;
     background-color: hsl(var(--clr-danger-hue), 100%, 50%);
     text-align: center;
     color: white;
-}
-
-.error-message.none {
-    display: none;
-}
-
-.error-message + .inner-container .main {
-    margin-top: 45px;
 }
 
 .main {
@@ -62,7 +59,18 @@ body {
     border-radius: 5px;
     width: 900px;
     height: 485px;
-    margin-top: 85px;
+    margin-top: 150px;
+}
+
+.error-message.on + .inner-container .main {
+    max-width: 90%;
+    color: white;
+    background-color: hsl(0, 0%, 8%);
+    box-shadow: 0 5px 10px white;
+    border-radius: 5px;
+    width: 900px;
+    height: 485px;
+    margin-top: 99px;
 }
 
 .content {
@@ -371,15 +379,18 @@ input[type=number]::-webkit-inner-spin-button {
 .res.on {
     height: auto;
     display: block;
+    padding: 60px;
     max-width: 90%;
     color: white;
     background-color: hsl(0, 0%, 8%);
     box-shadow: 0 5px 10px white;
     border-radius: 5px;
     width: 900px;
-    height: 400px;
     margin-top: 240px;
     margin-bottom: 150px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: 1;
 }
 
 .general2 {
@@ -429,4 +440,138 @@ input[type=number]::-webkit-inner-spin-button {
 
 .cash {
     padding-top: 8px;
+}
+
+@media (max-width: 718px) {
+    .main {
+        color: white;
+        background-color: hsl(0, 0%, 8%);
+        box-shadow: 0 5px 10px white;
+        border-radius: 5px;
+        width: 80vw;
+        margin-top: 14vh;
+        height: 700px;
+    }
+    .error-message.on + .inner-container .main {
+        max-width: 90%;
+        color: white;
+        background-color: hsl(0, 0%, 8%);
+        box-shadow: 0 5px 10px white;
+        border-radius: 5px;
+        width: 80vw;
+        height: 700px;
+        margin-top: calc(14vh - 77px);
+    }
+    .error-message.on {
+        margin-top: 25px;
+    }
+    .wlc {
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .explain {
+        font-size: 1rem;
+        font-weight: normal;
+        margin-top: 10px;
+        text-align: center;
+    }
+    .all {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 420px;
+    }
+    .data-inputs {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 340px;
+    }
+    .detail {
+        margin-bottom: 15px;
+    }
+    .detail-mid {
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+        border-left: 0;
+        border-right: 0;
+        padding-top: 12px;
+        padding-bottom: 100px;
+        margin-bottom: 15px;
+    }
+    .inp-title {
+        flex-grow: 0;
+    }
+    .inp-title-last {
+        flex-grow: 0;
+    }
+    .btn-row {
+        margin-top: 0px;
+    }
+    .btn-primary {
+        width: 120px;
+        text-align: center;
+        border-radius: 0.5rem;
+        font-size: 18px;
+    }
+    .option-container.option-container.active {
+        position: relative;
+        z-index: 1000;
+    }
+    .res.on {
+        font-size: 25px;
+        padding: 0;
+        width: 90vw;
+        height: 600px;
+    }
+    .general2 {
+        margin-left: 20px;
+        font-size: inherit;
+        margin-bottom: 45px;
+    }
+    
+    .general2.sorry {
+        margin-left: 20px;
+        font-size: inherit;
+        margin-bottom: 20px;
+    }
+    
+    .won {
+        position: relative;
+        left: 50%;
+        transform: translate(-50%);
+        text-align: center;
+        font-size: inherit;
+        margin-bottom: 40px;
+    }
+    
+    .stored {
+        font-size: inherit;
+        margin-bottom: 20px;
+        margin-left: 20px;
+    }
+    
+    
+    .link {
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+    
+    .link a {
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .priced {
+        font-size: inherit;
+        margin-top: 30px;
+    }
+    
+    .cash {
+        padding-top: 8px;
+        font-size: inherit;
+    }
 }

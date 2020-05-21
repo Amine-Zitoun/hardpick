@@ -2,78 +2,53 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
-let winner = {
-    pr: "n/a",
-    name: "n/a",
-    price: 0,
-    site: "n/a",
-    unit: "n/a",
-    differnce: 0
-}
-
-
 let currencies = {
     tunisia: "TND"
 }
 
-
-let recieved = false;
-
-router.get("/", (req, res) => {
-    res.json(recieved);
-})
-
 router.post("/", (req, res) => {
-    console.log(req.body)
+    if (typeof req.session.winner  == "undefined") {
+        req.session.winner = {
+            pr: "n/a",
+            name: "n/a",
+            price: 0,
+            site: "n/a",
+            unit: "n/a",
+            differnce: 0
+        };
+    }
     const comp = req.body.comp;
     const price = req.body.price;
     const region = req.body.region;
     let newPrice; //added cuz of api uses millimes
-    if (!(price) && !(region)) {
-        res.render("index.ejs", {errorMessage: "Please enter your country and budget"})
-    } else if (region == undefined) {
-        res.render("index.ejs", {errorMessage: "Please select your country"})
-    } else if (!price) {
-        res.render("index.ejs", {errorMessage: "Please enter your budget"})
-    } else if (price < 100){
-        res.render("index.ejs", {errorMessage: `Budget too low (under 100${currencies[region]})`})
-    } else {
-        switch (region) {
-            case "tunisia":
-                newPrice = price * 1000;
-                break;
-        }
-        getData(comp, newPrice, res, currencies[region]);
-
-        return
+    console.log(req.body);
+    switch (region) {
+        case "tunisia":
+            newPrice = price * 1000;
+            break;
     }
+    console.log(newPrice)
+    getData(comp, newPrice, req, res, currencies[region])
+        .then(data => res.json(data))
+        .catch(err => console.log(err))
+    
 })
 
-router.get("/showWin", (req, res) => {
-    res.json(winner);
-})
-
-router.get("/end", (req, res) => {
-    recieved = false;
-    console.log(recieved);
-})
-
-function getData(comp, newPrice, res, unit) {
+function getData(comp, newPrice, req, res, unit) {
     const api = `https://alphapicker.herokuapp.com/api/?comp=${comp}&budget=${newPrice}`;
-    axios.get(api)
+    return axios.get(api)
         .then((response) => {
-            recieved = true;
             const data = response.data;
-            console.log(data);
-            winner.name = data.win.prd;
-            winner.pr = data.win.pr;
-            winner.price = data.win.price;
-            winner.site = data.win.site;
-            winner.unit = unit;
-            winner.differnce = winner.price - newPrice;
-            console.log(recieved)
-            res.status(204).send()
-        })
+            req.session.winner.name = data.win.prd;
+            req.session.winner.pr = data.win.pr;
+            req.session.winner.price = data.win.price;
+            req.session.winner.site = data.win.site;
+            req.session.winner.unit = unit;
+            req.session.winner.differnce = req.session.winner.price - newPrice;
+            console.log(req.session.winner)
+            req.session.save();
+            return(req.session.winner);
+        }).catch(err => console.error(err))
 }
 
 module.exports = router;
