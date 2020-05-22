@@ -8,19 +8,19 @@ export function showWin(data) {
     console.log(data);
     switch (data.site) {
         case "sbs":
-            url = "www.sbsinformatique.com";
+            url = "http://www.sbsinformatique.com";
             break;
         case "mega":
-            url = "www.mega-pc.net";
+            url = "http://www.mega-pc.net";
             break;
         case "tunisia":
-            url = "www.tunisianet.com.tn";
+            url = "http://www.tunisianet.com.tn";
             break;
         case "extreme":
-            url = "extremegaming.tn";
+            url = "http://extremegaming.tn";
             break;
         case "wiki":
-            url = "www.wiki.tn";
+            url = "http://www.wiki.tn";
             break;
         }
         if (data.pr == "higher") {

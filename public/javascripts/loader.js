@@ -31,7 +31,7 @@ function masterFunc() {
         let comp = document.getElementById("comp").innerHTML.toLowerCase();
         let region = document.getElementById("region").innerHTML.toLowerCase();
         let price = +(document.getElementById("price").value);
-        fetch("http://localhost:3000/search", {
+        fetch("https://hardpick.herokuapp.com/search", {
             method: "POST",
             headers: {
                 "Accept": "application/json",

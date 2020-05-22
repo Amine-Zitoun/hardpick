@@ -517,7 +517,7 @@ input[type=number]::-webkit-inner-spin-button {
         border-radius: 0.5rem;
         font-size: 18px;
     }
-    .option-container.option-container.active {
+    .option-container.active {
         position: relative;
         z-index: 1000;
     }
@@ -525,12 +525,14 @@ input[type=number]::-webkit-inner-spin-button {
         font-size: 25px;
         padding: 0;
         width: 90vw;
-        height: 600px;
+        margin-top: 25vh;
+        margin-bottom: 20vh;
     }
     .general2 {
         margin-left: 20px;
         font-size: inherit;
         margin-bottom: 45px;
+        white-space: normal;
     }
     
     .general2.sorry {
@@ -546,12 +548,16 @@ input[type=number]::-webkit-inner-spin-button {
         text-align: center;
         font-size: inherit;
         margin-bottom: 40px;
+        margin-left: 0;
     }
     
     .stored {
         font-size: inherit;
         margin-bottom: 20px;
-        margin-left: 20px;
+        white-space: normal;
+        margin-left: 0;
+        width: 70vw;
+        word-wrap: break-word;
     }
     
     
